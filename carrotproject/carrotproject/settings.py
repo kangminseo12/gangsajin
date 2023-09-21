@@ -18,7 +18,7 @@ from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
 # secrets.json 파일을 읽은 후 secrets 변수에 저장
