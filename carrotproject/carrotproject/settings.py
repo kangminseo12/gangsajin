@@ -12,16 +12,41 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+"""
+시크릿설정 부분
+"""
+import os, json
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
+
+# secrets.json 파일을 읽은 후 secrets 변수에 저장
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
+# get_secret 함수를 생성하여 호출 시 해당 키 값 리턴
+def get_secret(setting, secrets=secrets):
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = "Set the {} environment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
+# get_secret 함수를 호출하여 json SECRET_KEY 키의 값 적용
+# 시크릿파일 열기 끝
+
+
+
+
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-aipj%2t-sv9pw81^^jaq3o)z)j(ilsjnncvlr2%-5ueugb)ss7'
-
+SECRET_KEY = get_secret("DB_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -76,11 +101,14 @@ WSGI_APPLICATION = 'carrotproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': "django.db.backends.postgresql",
+        'NAME': get_secret("DB_NAME"),
+        'USER': get_secret("DB_USER"),
+        'PASSWORD':get_secret("DB_PASSWORD"),
+        'HOST':get_secret("DB_HOST"),
+        'PORT': get_secret("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -117,6 +145,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
