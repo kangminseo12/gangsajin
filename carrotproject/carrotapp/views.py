@@ -9,3 +9,6 @@ def login(request):
 
 # def index(request):
 #     return render(request,"main.html")
+
+def chat(request):
+    return render(request, "dangun_app/chat.html")
