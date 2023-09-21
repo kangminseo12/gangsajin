@@ -151,3 +151,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#로그인 auth사용시 링크
+LOGIN_URL = 'dangun_app:login'
+LOGIN_REDIRECT_URL = 'dangun_app:main'
+LOGOUT_REDIRECT_URL = 'dangun_app:main'
+
+

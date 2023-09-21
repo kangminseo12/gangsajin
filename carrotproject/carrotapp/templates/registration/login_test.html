@@ -15,15 +15,15 @@
   </head>
 
   <body class="back-ye">
-    {% comment %} {% include 'dangun_app/nav.html' %} {% endcomment %}
+    {% include 'dangun_app/nav.html' %}
     <div class="container">
-      {% comment %} {% block content %} {% endcomment %}
+      {% block content %}
         <div class="login-container">
           <form method="post" class="login-form">
             <input type="text">
             <input type="text">
-            {% comment %} {% csrf_token %} {% endcomment %}
-            {% comment %} {{ form.as_p }} {% endcomment %}
+            {% csrf_token %}
+            {{ form.as_p }}
             <button type="submit" class="login-button">로그인</button>
           </form>
           <p class="register-reco">
@@ -31,7 +31,7 @@
             <a href="" class="bold">회원가입</a>
           </p>
         </div>
-      {% comment %} {% endblock %} {% endcomment %}
+      {% endblock %}
     </div>
   </body>
 
