@@ -162,3 +162,5 @@ cython_debug/
 django_env
 env
 secrets.json
+
+migrations

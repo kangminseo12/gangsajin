@@ -15,3 +15,10 @@ class PostProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     thumbnail = models.CharField() # 경로 불러오는 것으로
+
+# class Chatting(models.Model):
+#     product_id = models.CharField()
+#     product_image = models.CharField()
+    
+    # 신청자_id = models.CharField()
+    # 답변자_id = models.CharField()
