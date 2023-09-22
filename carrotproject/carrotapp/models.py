@@ -1,6 +1,7 @@
 from django.db import models
 
-# Create your models here.
+
+# 포스트상품
 class PostProduct(models.Model):
     author_id = models.CharField(max_length=30)
     buyier_id = models.CharField(max_length=30)

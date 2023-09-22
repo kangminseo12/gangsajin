@@ -11,6 +11,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+    <style>       
+    .errorlist {
+    background-color: #f44336;
+    border-radius: 100px;
+    padding: 13px;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    pointer-events: none;
+    }
+
+    </style>
     <title>Document</title>
   </head>
 
@@ -20,15 +33,15 @@
       {% block content %}
         <div class="login-container">
           <form method="post" class="login-form">
-            <input type="text">
-            <input type="text">
+
             {% csrf_token %}
             {{ form.as_p }}
+
             <button type="submit" class="login-button">로그인</button>
           </form>
           <p class="register-reco">
             당근마켓 회원이 아니신가요?
-            <a href="" class="bold">회원가입</a>
+            <a href="{% url 'user_app:register' %}" class="bold">회원가입</a>
           </p>
         </div>
       {% endblock %}

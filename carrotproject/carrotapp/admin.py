@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import PostProduct
+from . import models
 
 # Register your models here.
-admin.site.register(PostProduct) # 자체적으로 게시물 지원함
+
+# 포스트를 관리자페이지와 연결
+admin.site.register(models.PostProduct) 
