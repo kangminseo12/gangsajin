@@ -61,7 +61,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_("이메일주소"), unique=True,null =True)
     nickname = models.CharField(_("닉네임"), max_length=20, unique=True)
     date_joined = models.DateTimeField(_("생성일"), default=timezone.now)
-    location = models.CharField(("지역"),default="인증필요")
+    location = models.CharField(("지역"),max_length=100, default="인증필요")
     manner = models.IntegerField(("온도"),validators=[MinValueValidator(0), MaxValueValidator(100)],default=50)
 
 
