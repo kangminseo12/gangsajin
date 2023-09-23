@@ -63,5 +63,4 @@ def register(request):
     # 아니라면 GET요청이 온다
     else:
         form = CustomLoginForm()   
-        print(11111111111) 
     return render(request,"registration/register.html")

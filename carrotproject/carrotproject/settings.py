@@ -19,6 +19,8 @@ import os, json
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# 로컬 db로 교체
 # secret_file = os.path.join(BASE_DIR, 'secrets.json')
 secret_file = os.path.join(BASE_DIR, 'local_secrets.json')
 
@@ -158,15 +160,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #로그인 auth사용시 링크
-LOGIN_URL = 'dangun_app:login'
+LOGIN_URL = 'user_app:login'
 LOGIN_REDIRECT_URL = 'dangun_app:main'
 LOGOUT_REDIRECT_URL = 'dangun_app:main'
 
 # 기본 유저를 커스텀 유저로 변경한다
 AUTH_USER_MODEL = 'user_app.CustomUser'
 
-# 브라우저를 닫아도 세션기록 유지! [ 로그인 안풀리게 ! ]
-ACCOUNT_SESSION_REMEMBER = True  
+# # 브라우저를 닫아도 세션기록 유지! [ 로그인 안풀리게 ]
+# ACCOUNT_SESSION_REMEMBER = True  
 
-# 쿠키를 한시간만 저장 [ 세션 ]
-SESSION_COOKIE_AGE = 3600  
+# # 쿠키를 한시간만 저장 [ 세션 ]
+# SESSION_COOKIE_AGE = 3600  

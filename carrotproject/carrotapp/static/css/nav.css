@@ -27,6 +27,8 @@ nav{
     border: none;
     background-color: transparent;
     font-weight: 700;
+    display: inline-block;
+     white-space: nowrap;
 
 }
 
@@ -35,6 +37,8 @@ nav{
     padding: 6px 16px;
     text-decoration: none;
     border: 1px solid #d7d7d7;
+    display: inline-block; 
+    white-space: nowrap;
 }
 
 .orange{
@@ -52,4 +56,19 @@ input{
 .orange-text{
     color: #fa6616;
     
+}
+
+
+@media (max-width: 767px){
+    .logo{
+        margin-right: 2px;
+    }
+    #search{
+        background-color: #f3f3f3;
+        width: 100px;
+    }
+    #search::placeholder {
+        color: #f3f3f3;
+    }
+
 }

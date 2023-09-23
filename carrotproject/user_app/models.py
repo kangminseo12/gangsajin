@@ -34,9 +34,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('이메일을 입력해주세요')
         email = self.normalize_email(email)
-        print(111111111111111111)
+        print("입력된 유저네임:")
         print(username)
-        print(111111111111111111)
+        print("-------확인선-------")
 
         user = self.model(username=username, nickname=nickname, email=email,  **extra_fields)
         user.set_password(password)
@@ -57,12 +57,12 @@ class UserManager(BaseUserManager):
         return self._create_user(username, nickname, email, password, **extra_fields)
     
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(_("username"), max_length=20,   unique=True)
-    email = models.EmailField(_("email_address"), unique=True,null =True)
-    nickname = models.CharField(_("nickname"), max_length=20, unique=True)
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    location = models.CharField(("location"),default="인증필요")
-    manner = models.IntegerField(("manner"),validators=[MinValueValidator(0), MaxValueValidator(100)],default=50)
+    username = models.CharField(_("사용자이름"), max_length=20,   unique=True)
+    email = models.EmailField(_("이메일주소"), unique=True,null =True)
+    nickname = models.CharField(_("닉네임"), max_length=20, unique=True)
+    date_joined = models.DateTimeField(_("생성일"), default=timezone.now)
+    location = models.CharField(("지역"),default="인증필요")
+    manner = models.IntegerField(("온도"),validators=[MinValueValidator(0), MaxValueValidator(100)],default=50)
 
 
     is_staff = models.BooleanField(_("staff status"), default=False)

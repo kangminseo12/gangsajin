@@ -33,7 +33,7 @@
         <div class="login-container">
           <form method="post" class="login-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.as_ul }}
             <button type="submit" class="login-button">등록</button>
           </form>
           <p class="register-reco">
