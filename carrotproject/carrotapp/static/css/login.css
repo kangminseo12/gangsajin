@@ -1,12 +1,30 @@
 .login-container{
     width: 440px;
-    min-height: 100dvh;
+    min-height: 800px;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin: auto;
+
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-left:-220px;
+    margin-top: -380px;
 }
 
+@media (max-width: 767px){
+    .login-container{
+        width: 370px;
+        min-height: 800px;
+
+        margin-left:-185px;
+        margin-top: -360px;
+    }
+}
+
+li{
+    list-style:none;
+    }
 
 .login-input{
     width: -webkit-fill-available;
@@ -19,7 +37,7 @@
 .login-form{
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
 }
 
 .login-form label{
@@ -60,3 +78,20 @@ button:hover{
     color: #ff823f;
     cursor: pointer;
 }
+
+p {
+    padding-bottom: 20px;
+}
+.helptext {
+    display: block;
+    padding-top: 10px;
+}
+
+.errorlist {
+    border-radius: 100px;
+    border: none;
+    color: #f44336;
+    font-size: 16px;
+    font-weight: 700;
+    pointer-events: none;
+    }
