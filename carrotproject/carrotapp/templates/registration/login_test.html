@@ -11,27 +11,29 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
-    <title>강사진 강민서</title>
+
+    <title>Document</title>
+
   </head>
 
   <body class="back-ye">
-    {% comment %} {% include 'dangun_app/nav.html' %} {% endcomment %}
+    {% include 'dangun_app/nav.html' %}
     <div class="container">
-      {% comment %} {% block content %} {% endcomment %}
+      {% block content %}
         <div class="login-container">
           <form method="post" class="login-form">
-            <input type="text">
-            <input type="text">
-            {% comment %} {% csrf_token %} {% endcomment %}
-            {% comment %} {{ form.as_p }} {% endcomment %}
+
+            {% csrf_token %}
+            {{ form.as_p }}
+
             <button type="submit" class="login-button">로그인</button>
           </form>
           <p class="register-reco">
             당근마켓 회원이 아니신가요?
-            <a href="" class="bold">회원가입</a>
+            <a href="{% url 'user_app:register' %}" class="bold">회원가입</a>
           </p>
         </div>
-      {% comment %} {% endblock %} {% endcomment %}
+      {% endblock %}
     </div>
   </body>
 

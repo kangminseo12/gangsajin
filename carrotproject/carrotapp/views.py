@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
 
 # Create your views here.
-def login(request):
-    return render(request,"registration/login_test.html")
 
-# def register(request):
-#     return render(request,"register.html")
+
+def main(request):
+    return render(request, "dangun_app/main_test.html")
 
 # def index(request):
 #     return render(request,"main.html")
