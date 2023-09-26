@@ -3,7 +3,6 @@ from .models import PostProduct
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from .models import Location
 
 from django.http import JsonResponse
 from django.contrib import messages
@@ -96,7 +95,7 @@ def trade_post(request,post_id):
     }
     return render(request,"dangun_app/trade_post_test.html", context)
   
-  @login_required
+@login_required
 def chatroom_list(request):
     # 채팅방 리스트 중 하나를 클릭했을 경우
     # if request.method == "POST":
