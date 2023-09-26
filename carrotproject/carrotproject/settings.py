@@ -61,15 +61,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "carrotapp",
-    "user_app",
-    "django.contrib.humanize",
+
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'carrotapp',
+    'user_app'
 ]
 
 MIDDLEWARE = [
@@ -168,6 +169,11 @@ LOGOUT_REDIRECT_URL = "dangun_app:main"
 
 # 기본 유저를 커스텀 유저로 변경한다
 AUTH_USER_MODEL = "user_app.CustomUser"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 # # 브라우저를 닫아도 세션기록 유지! [ 로그인 안풀리게 ]
 # ACCOUNT_SESSION_REMEMBER = True
