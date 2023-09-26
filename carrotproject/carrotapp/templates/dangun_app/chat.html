@@ -1,4 +1,5 @@
-{% load static%}{% load humanize %}
+{% load static %}
+{% load custom_timesince %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,19 +51,23 @@
                 </div>
               </div>
               <!-- 채팅방리스트 -->
-              <div class="flex-box chat-box between">
+              {% for item in context %}
+              <div class="flex-box chat-box between" id="room-info-submit">
                 <div>
                   <div class="flex-box">
-                    <p class="bold">상대방아이디</p>
-                    <p class="s-text">화곡동</p>
-                    <p class="s-text">3주전</p>
+                    <p id="room-id">{ item. }</p>
+                    <p class="bold">{{ item.chat_partner.nickname }}</p>
+                    <p class="s-text">{{ item.chat_partner.location }}</p>
+                    <p class="s-text">{{ item.message.sent_at|custom_timesince }}</p>
+                    
                   </div>
-                  <p class="chat-thumb-text">거래 잘 하셨나요? 거래한 이웃..</p>
+                  <p class="chat-thumb-text">{{ item.message.content }}</p>
                 </div>
                 <div class="thumbnail-box">
                   <img src="" alt="">
                 </div>
               </div>
+              {% endfor %}
             </div>
           </div>
 
@@ -70,9 +75,9 @@
           <div class="chat-main-container">
             <div>
               <div class="contact-info flex-box">
-                상대방아이디
+                {{ item.chat_partner.nickname }}
                 <div class="temp">
-                  36.9도
+                  {{ item.chat_partner.manner }}
                 </div>
               </div>
 
@@ -83,11 +88,11 @@
                     <img src="" alt="">
                   </div>
                   <div class="goods-info-box">
-                    <p>LG 양문형 냉장고 778L</p>
-                    <p class="bold">150,000원</p>
+                    <p>{{ item.product.title }}</p>
+                    <p class="bold">{{ item.product.price }}</p>
                   </div>
                 </div>
-                <button>거래완료</button>
+                <button>{{ item.product.status }}</button>
               </div>
 
               <!--채팅창 메인-->
@@ -114,7 +119,11 @@
       </div>
     </div>
     {% comment %} {% include 'dangun_app/footer.html' %} {% endcomment %}
+    
+    <!-- script -->
+    <script>
 
+    </script>
   </body>
 
 </html>
