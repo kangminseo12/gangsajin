@@ -17,7 +17,7 @@ class PostProduct(models.Model):
     status = models.CharField(max_length=1, default='N')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    thumbnail = models.CharField(max_length=1500) # 경로 불러오는 것으로
+    thumbnail = models.ImageField(null=True, upload_to='about_me/awards/%Y/%m/%d', height_field=None, width_field=None, max_length=None) # 경로 불러오는 것으로
 
     # 나중에 카테고리에서 외래키로 가져올 수 있도로
     # category = models.ForeignKey(
