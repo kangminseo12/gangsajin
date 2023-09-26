@@ -1,5 +1,4 @@
-{% load custom_filter%}
-{% load static %}{% load humanize %}
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -15,11 +14,6 @@
   <body>
     {% include 'dangun_app/nav.html' %}
     <div class="content-box">
-      <a href="{% url 'dangun_app:write' %}">
-        <div class="floating-button">
-          거래글쓰기
-        </div>
-      </a>
       <div class="about-trade">
         <div class="container ">
           <div class="trade-text">
@@ -42,22 +36,22 @@
           {% for post in posts %}
 
             <div class="card-box">
-              <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
+              <a href="" class="trade-text-link">
                 <div class="card-img">
-                  {% if post.images %}
-                    <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                  {% if post.thumnail %}
+                    <!-- <img src="{{ post.images.url }}" alt="{{ post.title }}"> -->
                   {% endif %}
                 </div>
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price |intcomma}}원</p>
+                  <p class="bold">{{ post.price }}원</p>
                   <p>{{ post.location }}</p>
                   <div class="flex-box">
                     <p>조회
-                      {{ post.view_num }}</p>
+                      {{ post.view }}</p>
                     <p>·</p>
                     <p>채팅
-                      {{ post.chat_num }}</p>
+                      {{ post.chat_id }}</p>
                   </div>
                 </div>
               </a>

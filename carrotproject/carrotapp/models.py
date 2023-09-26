@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from user_app.models import CustomUser
 
 # 포스트상품
 class PostProduct(models.Model):
@@ -33,5 +34,3 @@ class Chatting(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-

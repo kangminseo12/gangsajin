@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+from .models import PostProduct
 from django.contrib.auth import authenticate, login
+
 
 from .models import PostProduct
 # Create your views here.
@@ -10,6 +11,10 @@ def main(request):
     return render(request, "dangun_app/main_test.html")
 
 
+def trade(request):
+    top_views_posts = PostProduct.objects.all()
+    return render(request, 'dangun_app/trade.html', {'posts': top_views_posts})
+  
 # 물품 상세보기 페이지
 def trade_post(request,post_id):
     # 포스트 id 번호를 불러옮
