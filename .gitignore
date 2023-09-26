@@ -167,3 +167,4 @@ secrets.json
 local_secrets.json
 
 migrations
+.vscode
