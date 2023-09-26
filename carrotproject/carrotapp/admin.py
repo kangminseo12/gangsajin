@@ -5,3 +5,5 @@ from . import models
 
 # 포스트를 관리자페이지와 연결
 admin.site.register(models.PostProduct) 
+admin.site.register(models.ChatRoom)
+admin.site.register(models.Message)
