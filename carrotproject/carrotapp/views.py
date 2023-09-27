@@ -94,33 +94,25 @@ def trade_post(request,post_id):
         "post" : post,
     }
     return render(request,"dangun_app/trade_post_test.html", context)
-  
-@login_required
-def chatroom_list(request):
-    # 채팅방 리스트 중 하나를 클릭했을 경우
-    # if request.method == "POST":
-    #     chatroom_id = request.
 
-    
-    # chat 화면을 처음 들어왔을 경우 채팅방 리스트를 뿌려줌
-    user = request.user
 
+def get_chatrooms_context(user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
     chatrooms = ChatRoom.objects.filter(
         Q(chat_host=user.id) | Q(chat_guest=user.id)
     )
 
     # 최종적으로 넘겨줄 결과 chatroom 리스트 초기화
-    context = []
+    chatrooms_context = []
 
     # 각 chatroom에 대해 필요한 정보 가져옴
     for chatroom in chatrooms:
         
         # 채팅 상대 정보
         if chatroom.chat_host == user.id:
-            chat_partner = CustomUser.objects.get(id=chatroom.chat_host)
-        else:
             chat_partner = CustomUser.objects.get(id=chatroom.chat_guest)
+        else:
+            chat_partner = CustomUser.objects.get(id=chatroom.chat_host)
         
         # 상품
         product = PostProduct.objects.get(id=chatroom.product_id)
@@ -129,28 +121,56 @@ def chatroom_list(request):
         last_message = Message.objects.filter(chatroom_id=chatroom.id).order_by('-sent_at').first()
 
         result = {
-            
+            'chatroom' : chatroom, # 채팅방 정보
             'chat_partner' : chat_partner, # 채팅 상대방의 정보
             'product' : product, # 상품 정보
             'message' : last_message # 마지막 메시지 정보
         }
 
-        context.append(result)
+        chatrooms_context.append(result)
+    
+    return chatrooms_context
 
-    return render(request, 'dangun_app/chat.html', {'context' : context})
+@login_required
+def chatroom_list(request):
+    user = request.user
+    
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
+    
+    return render(request, 'dangun_app/chat.html', {'chatrooms' : chatrooms_context})
 
 @login_required
 def chatroom(request, chatroom_id):
-    # 현재 로그인한 사용자의 정보
     user = request.user
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
     
-    # 채팅 상대 정보
-    chatroom = ChatRoom.objects.get(id=chatroom_id)
-    
-    if chatroom.chat_host == user.id:
-        chat_partner = CustomUser.objects.get(id=chatroom.chat_host)
+    # 클릭한 채팅방 및 채팅 상대방에 대한 정보
+    selected_chatroom = ChatRoom.objects.get(id=chatroom_id)
+    if selected_chatroom.chat_host == user.id:
+        chat_partner = CustomUser.objects.get(id=selected_chatroom.chat_guest)
     else:
-        chat_partner = CustomUser.objects.get(id=chatroom.chat_guest)
+        chat_partner = CustomUser.objects.get(id=selected_chatroom.chat_host)
 
-    return render(request, "dangun_app/chat.html", {"chatroom_id" : chatroom_id})
+    # 어떤 상품에 대한 채팅방인지
+    product = PostProduct.objects.get(id=selected_chatroom.product_id)
+
+    # 주고받은 채팅(메시지) 기록
+    messages = Message.objects.filter(chatroom=chatroom_id).order_by('sent_at')
+
+    # WebSocket 연결을 위한 주소
+    ws_path = f"/ws/chat/{selected_chatroom.id}"
+
+    # 템플릿에 전달할 데이터 정의
+    context = {
+        'chatrooms' : chatrooms_context,
+        "selected_chatroom" : selected_chatroom,
+        "product" : product,
+        "chat_partner" : chat_partner,
+        "messages" : messages,
+        "ws_path" : ws_path,
+    }
+
+    return render(request, "dangun_app/chat.html", context)
 
