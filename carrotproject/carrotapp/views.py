@@ -36,7 +36,7 @@ def search(request):
 
 @login_required
 def write(request, post_id=None):
-    if request.user.location != "Y":
+    if request.user.location != "인증필요":
         return redirect("dangun_app:alert", alert_message=_("동네인증이 필요합니다."))
 
     post = None
@@ -139,7 +139,7 @@ def trade_post(request, post_id):
             post.delete()
             # 포스트페이지로 가는게 맞아서 나중에 바꿀것
             # return redirect('dangun_app/trade')
-            return render(request, "dangun_app/main_test.html")
+            return render(request, "dangun_app/main.html")
     #  조회수 증가
     post.view += 1
     post.save()
@@ -148,7 +148,7 @@ def trade_post(request, post_id):
         "post": post,
     }
 
-    return render(request, "dangun_app/trade_post_test.html", context)
+    return render(request, "dangun_app/trade_post.html", context)
 
 
 @login_required

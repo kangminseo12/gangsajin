@@ -21,7 +21,7 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # 로컬 db로 교체
-# secret_file = os.path.join(BASE_DIR, 'secrets.json')
+# secret_file = os.path.join(BASE_DIR, 'local_secrets.json')
 secret_file = os.path.join(BASE_DIR, "secrets.json")
 
 

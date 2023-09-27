@@ -34,8 +34,8 @@ class MyUserAdmin(UserAdmin):
     )
     form = MyUserChangeForm
     add_form = MyUserCreationForm
-    list_display = ( 'username', 'nickname','email','is_staff')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    search_fields = ( 'username', 'nickname', 'email')
+    list_display = ( 'id', 'username', 'nickname','email','is_staff')
+    list_filter = ('id','is_staff', 'is_superuser', 'is_active', 'groups')
+    search_fields = ( 'id','username', 'nickname', 'email')
 
 admin.site.register(CustomUser, MyUserAdmin)
