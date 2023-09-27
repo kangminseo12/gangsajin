@@ -18,20 +18,20 @@ import uuid
 
 
 # Create your views here.
+
 def main(request):
-    return render(request, "dangun_app/main.html")
+    list_post = PostProduct.objects.filter(status="N").order_by('-view')
+    return render(request, "dangun_app/main.html", {'posts': list_post})
 
 
 def trade(request):
-    return render(request, "dangun_app/trade.html")
+    top_views_posts = PostProduct.objects.filter(status="N").order_by('-view')
+    return render(request, 'dangun_app/trade.html', {'posts': top_views_posts})
 
-
-def write(request):
-    return render(request, "dangun_app/write.html")
-
-
-def chat(request):
-    return render(request, "dangun_app/chat.html")
+def search(request):
+    search_data = request.GET.get("search")
+    search_list = PostProduct.objects.filter(Q(title__icontains=search_data)|Q(location__icontains=search_data)) 
+    return render(request, "dangun_app/search.html", {'posts': search_list})
 
 
 @login_required
@@ -127,11 +127,6 @@ def set_region_certification(request):
         messages.success(request, _("인증되었습니다"))
 
         return redirect("dangun_app:main")
-
-
-def trade(request):
-    top_views_posts = PostProduct.objects.all()
-    return render(request, "dangun_app/trade.html", {"posts": top_views_posts})
 
 
 # 물품 상세보기 페이지

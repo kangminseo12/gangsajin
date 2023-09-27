@@ -14,10 +14,8 @@ urlpatterns = [
     path("create_form/", views.create_post, name="create_form"),
     path("location", views.location, name="location"),
     path("set_region/", views.set_region, name="set_region"),
-    path(
-        "set_region_certification/", views.set_region_certification, name="set_region_certification"
-    ),
-    path("chat/", views.chat, name="chat"),
-    path("chat/", views.chatroom_list, name="chatroom"),
-    path("ws/chat/<str:chatroom_id>/", views.chatroom, name="chat_room"),
+    path("set_region_certification/", views.set_region_certification, name="set_region_certification"),
+    path('chat/', views.chatroom_list, name='chatroom'),
+    path('ws/chat/<str:chatroom_id>/', views.chatroom, name='chat_room'),
+    path('search/', views.search, name='search')
 ]
