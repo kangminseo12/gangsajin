@@ -16,13 +16,18 @@ class PostProduct(models.Model):
     description = models.TextField()
     price = models.IntegerField(default=0)
     location = models.CharField(max_length=250)
-    chat_id = models.BigIntegerField()
+    chat_id = models.BigIntegerField(null=True, default=0)
     view = models.IntegerField(default=0)
     status = models.CharField(max_length=1, default="N")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    thumbnail = models.ImageField(null=True, upload_to='about_me/awards/%Y/%m/%d', height_field=None, width_field=None, max_length=None) # 경로 불러오는 것으로
-
+    thumbnail = models.ImageField(
+        null=True,
+        upload_to="about_me/awards/%Y/%m/%d",
+        height_field=None,
+        width_field=None,
+        max_length=None,
+    )  # 경로 불러오는 것으로
 
     # 나중에 카테고리에서 외래키로 가져올 수 있도로
     # category = models.ForeignKey(
@@ -30,12 +35,14 @@ class PostProduct(models.Model):
     #         on_delete = models.CASCADE,
     #         )
 
+
 class ChatRoom(models.Model):
     id = models.AutoField(primary_key=True)
     product = models.ForeignKey(PostProduct, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     chat_host = models.IntegerField()
     chat_guest = models.IntegerField()
+
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
@@ -45,4 +52,3 @@ class Message(models.Model):
     content = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
-

@@ -14,6 +14,11 @@
   <body>
     {% include 'dangun_app/nav.html' %}
     <div class="content-box">
+      <a href="{% url 'dangun_app:write' %}">
+        <div class="floating-button">
+          거래글쓰기
+        </div>
+      </a>
       <div class="about-trade">
         <div class="container ">
           <div class="trade-text">
@@ -39,7 +44,7 @@
               <a href="" class="trade-text-link">
                 <div class="card-img">
                   {% if post.thumnail %}
-                    <!-- <img src="{{ post.images.url }}" alt="{{ post.title }}"> -->
+                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
                   {% endif %}
                 </div>
                 <div class="card-info-box">
