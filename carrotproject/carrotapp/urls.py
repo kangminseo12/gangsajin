@@ -6,16 +6,16 @@ from . import views
 
 app_name = "dangun_app"
 urlpatterns = [
-
-    path('', views.main,name='main'),
-    path('trade/', views.trade, name='trade'),
-    path('trade/<int:post_id>',views.trade_post, name='trade_post'),
+    path("", views.main, name="main"),
+    path("trade/", views.trade, name="trade"),
+    path("trade/<int:post_id>", views.trade_post, name="trade_post"),
+    path("wirte/", views.write, name="write"),
+    path("edit/<int:id>/", views.edit, name="edit"),
+    path("create_form/", views.create_post, name="create_form"),
     path("location", views.location, name="location"),
     path("set_region/", views.set_region, name="set_region"),
     path("set_region_certification/", views.set_region_certification, name="set_region_certification"),
-  
     path('chat/', views.chatroom_list, name='chatroom'),
     path('ws/chat/<str:chatroom_id>/', views.chatroom, name='chat_room'),
-
     path('search/', views.search, name='search')
 ]
