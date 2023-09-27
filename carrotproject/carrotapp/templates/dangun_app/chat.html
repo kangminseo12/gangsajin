@@ -53,14 +53,13 @@
               <!-- 채팅방리스트 -->
               {% if chatrooms %}
               {% for chatroom in chatrooms %}
-              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:chatroom_ws' chatroom.chatroom.id%}";'>
+              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:selected_chatroom' chatroom.chatroom.id%}";'>
                 <div>
                   <div class="flex-box">
                     <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
                     <p class="s-text">{{ chatroom.chat_partner.location }}</p>
-                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
-                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
-                    
+                    <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p>
+                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at }}</p> {% endcomment %}
                   </div>
                   <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
                 </div>
@@ -79,7 +78,7 @@
                 <div class="contact-info flex-box">
                     {{ chat_partner.nickname }}
                     <div class="temp">
-                        {{ chat_partner.manner }}
+                               {{ chat_partner.manner }}
                     </div>
                 </div>
 
