@@ -17,4 +17,5 @@ urlpatterns = [
     path('chat/', views.chatroom_list, name='chatroom'),
     path('ws/chat/<str:chatroom_id>/', views.chatroom, name='chat_room'),
 
+    path('search/', views.search, name='search')
 ]
