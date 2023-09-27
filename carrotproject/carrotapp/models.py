@@ -40,15 +40,15 @@ class ChatRoom(models.Model):
     id = models.AutoField(primary_key=True)
     product = models.ForeignKey(PostProduct, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    chat_host = models.CharField(max_length=32)
-    chat_guest = models.CharField(max_length=32)
+    chat_host = models.IntegerField()
+    chat_guest = models.IntegerField()
 
 
 class Message(models.Model):
     id = models.AutoField(primary_key=True)
     chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, null=True)
-    sender = models.CharField(max_length=32)
-    receiver = models.CharField(max_length=32)
+    sender = models.IntegerField()
+    receiver = models.IntegerField()
     content = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
