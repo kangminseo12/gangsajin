@@ -15,6 +15,6 @@ urlpatterns = [
     path("set_region_certification/", views.set_region_certification, name="set_region_certification"),
   
     path('chat/', views.chatroom_list, name='chatroom'),
-    path('ws/chat/<str:chatroom_id>/', views.chatroom, name='chat_room'),
+    path('chat/<int:chatroom_id>/', views.chatroom, name='chatroom_ws'),
 
 ]
