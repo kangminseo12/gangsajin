@@ -150,15 +150,17 @@ def trade_post(request, post_id):
 
     return render(request, "dangun_app/trade_post_test.html", context)
 
+def create_chatroom(request, post_id):
+    if request.method == "POST":
+        host = PostProduct.objects.get(id=post_id).author_id
+        guest = request.user.id
 
-@login_required
-def chatroom_list(request):
-    # 채팅방 리스트 중 하나를 클릭했을 경우
-    # if request.method == "POST":
-    #     chatroom_id = request.
+        # 채팅방 생성
+        newchatroom = ChatRoom.objects.create(chat_host=host, chat_guest=guest, product_id=post_id)
+        newchatroom.save()
 
-    # chat 화면을 처음 들어왔을 경우 채팅방 리스트를 뿌려줌
-    user = request.user
+        # 채팅화면으로 보냄
+        return redirect('dangun_app:selected_chatroom', chatroom_id=newchatroom.id)
 
 def get_chatrooms_context(user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
