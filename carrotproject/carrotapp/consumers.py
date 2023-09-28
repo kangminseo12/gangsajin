@@ -55,6 +55,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    # 그룹 내의 모든 사용자에게 메시지를 브로드캐스트하기 위해 호출됩니다.
+    # 'receive' 함수에서 room group에 메시지를 전송할 때, 아래 chat_message 함수가 메시지를 실제로 브로드캐스트 하는 역할을 한다고 합니다.
+    async def chat_message(self, event):
+        message = event['message']
+        sender_id = event['sender_id']
+        sent_at = event['sent_at']
+
+        await self.send(text_data=json.dumps({
+            'message': message,
+            'sender_id': sender_id,
+            'sent_at': sent_at
+        }))
+
     # 메시지 형식에 맞춰 데이터베이스에 저장합니다
     @database_sync_to_async
     def save_message(self, chatroom_id, sender_id, receiver_id, message):
@@ -65,16 +78,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def get_chatroom(self, chatroom_id):
         return ChatRoom.objects.get(id=chatroom_id)
 
-    # chat_message에서 그룹 내 모든 사용자에게 메시지를 브로드캐스트하는 기능은 receive 메서드에 이미 있으므로,
-    # 삭제하여도 된다고 합니다. (테스트 필요)
-    
-    # async def chat_message(self, event):
-    #     message = event['message']
-    #     sender_id = event['sender_id']
-    #     sent_at = event['sent_at']
-
-    #     await self.send(text_data=json.dumps({
-    #         'message': message,
-    #         'sender_id': sender_id,
-    #         'sent_at': sent_at
-    #     }))
