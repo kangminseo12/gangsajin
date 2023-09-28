@@ -58,8 +58,8 @@
                   <div class="flex-box">
                     <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
                     <p class="s-text">{{ chatroom.chat_partner.location }}</p>
-                    <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p>
-                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at }}</p> {% endcomment %}
+                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
+                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
                   </div>
                   <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
                 </div>
@@ -97,8 +97,8 @@
               </div>
 
               <!--채팅창 메인-->
-              {% if messages %}
               <div class="chat-container">
+                {% if messages %}
                 {% for message in messages %}
                     {% if message.sender == user.id %}
                         <div class="message-box from-me">
@@ -112,11 +112,10 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+                {% endif %}
                 <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
               </div>
-                {% endif %}
             </div>
-
             <form class="chat-input">
               <textarea name="" id="message-textarea" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>
               <div>
