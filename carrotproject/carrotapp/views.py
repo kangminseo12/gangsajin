@@ -15,27 +15,24 @@ from .forms import PostForm
 
 # 포스팅
 import uuid
+import openai
 
 
 # Create your views here.
 
-
 def main(request):
-    list_post = PostProduct.objects.filter(status="N").order_by("-view")
-    return render(request, "dangun_app/main.html", {"posts": list_post})
+    list_post = PostProduct.objects.filter(status="N").order_by('-view')
+    return render(request, "dangun_app/main.html", {'posts': list_post})
 
 
 def trade(request):
-    top_views_posts = PostProduct.objects.filter(status="N").order_by("-view")
-    return render(request, "dangun_app/trade.html", {"posts": top_views_posts})
-
+    top_views_posts = PostProduct.objects.filter(status="N").order_by('-view')
+    return render(request, 'dangun_app/trade.html', {'posts': top_views_posts})
 
 def search(request):
     search_data = request.GET.get("search")
-    search_list = PostProduct.objects.filter(
-        Q(title__icontains=search_data) | Q(location__icontains=search_data)
-    )
-    return render(request, "dangun_app/search.html", {"posts": search_list})
+    search_list = PostProduct.objects.filter(Q(title__icontains=search_data)|Q(location__icontains=search_data)) 
+    return render(request, "dangun_app/search.html", {'posts': search_list})
 
 
 @login_required
@@ -66,7 +63,7 @@ def edit(request, id):
         if "thumbnail" in request.FILES:
             post.thumbnail = request.FILES["thumbnail"]
         post.save()
-        return redirect("dangun_app:trade_post", post_id=id)
+        return redirect("dangun_app:trade_post", pk=id)
 
     return render(request, "dangun_app/write.html", {"post": post})
 
@@ -164,7 +161,6 @@ def chatroom_list(request):
     # chat 화면을 처음 들어왔을 경우 채팅방 리스트를 뿌려줌
     user = request.user
 
-
 def get_chatrooms_context(user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
     chatrooms = ChatRoom.objects.filter(Q(chat_host=user.id) | Q(chat_guest=user.id))
@@ -187,25 +183,27 @@ def get_chatrooms_context(user):
         last_message = Message.objects.filter(chatroom_id=chatroom.id).order_by("-sent_at").first()
 
         result = {
-            "chatroom": chatroom,  # 채팅방 정보
-            "chat_partner": chat_partner,  # 채팅 상대방의 정보
-            "product": product,  # 상품 정보
-            "message": last_message,  # 마지막 메시지 정보
+          
+            'chatroom' : chatroom, # 채팅방 정보
+            'chat_partner' : chat_partner, # 채팅 상대방의 정보
+            'product' : product, # 상품 정보
+            'message' : last_message # 마지막 메시지 정보
+
         }
 
         chatrooms_context.append(result)
-
+    
     return chatrooms_context
 
 
 @login_required
 def chatroom_list(request):
     user = request.user
-
+    
     # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
     chatrooms_context = get_chatrooms_context(user)
-
-    return render(request, "dangun_app/chat.html", {"chatrooms": chatrooms_context})
+    
+    return render(request, 'dangun_app/chat.html', {'chatrooms' : chatrooms_context})
 
 
 @login_required
@@ -214,7 +212,7 @@ def chatroom(request, chatroom_id):
 
     # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
     chatrooms_context = get_chatrooms_context(user)
-
+    
     # 클릭한 채팅방 및 채팅 상대방에 대한 정보
     selected_chatroom = ChatRoom.objects.get(id=chatroom_id)
     if selected_chatroom.chat_host == user.id:
@@ -233,19 +231,55 @@ def chatroom(request, chatroom_id):
     product = PostProduct.objects.get(id=selected_chatroom.product_id)
 
     # 주고받은 채팅(메시지) 기록
-    messages = Message.objects.filter(chatroom=chatroom_id).order_by("sent_at")
+    messages = Message.objects.filter(chatroom=chatroom_id).order_by('sent_at')
 
     # WebSocket 연결을 위한 주소
     ws_path = f"/ws/chat/{selected_chatroom.id}"
 
     # 템플릿에 전달할 데이터 정의
     context = {
-        "chatrooms": chatrooms_context,
-        "selected_chatroom": selected_chatroom,
-        "product": product,
-        "chat_partner": chat_partner,
-        "messages": messages,
-        "ws_path": ws_path,
+        'chatrooms' : chatrooms_context,
+        "selected_chatroom" : selected_chatroom,
+        "product" : product,
+        "chat_partner" : chat_partner,
+        "messages" : messages,
+        "ws_path" : ws_path,
     }
 
     return render(request, "dangun_app/chat.html", context)
+
+def chat_bot(request):
+    user = request.user
+
+    # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
+    chatrooms_context = get_chatrooms_context(user)
+    
+    
+    # 템플릿에 전달할 데이터 정의
+    context = {
+        'chatrooms' : chatrooms_context,
+    }
+
+    return render(request, "dangun_app/chat_bot.html", context)
+
+openai.api_key = "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"
+
+def auto(request):
+    if request.method == "POST":
+    
+        #제목 필드값 가져옴
+        prompt = request.POST.get('title')
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            # 반환된 응답에서 텍스트 추출해 변수에 저장
+            message = response['choices'][0]['message']['content']
+        except Exception as e:
+            message = str(e)
+        return JsonResponse({"message": message})
+    return render(request, 'chat_bot.html')
