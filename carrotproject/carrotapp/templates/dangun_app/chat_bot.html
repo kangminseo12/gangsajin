@@ -53,7 +53,8 @@
               <!-- 채팅방리스트 -->
               {% if chatrooms %}
               {% for chatroom in chatrooms %}
-              <div class="flex-box chat-box between" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:chatroom_ws' chatroom.chatroom.id%}";'>
+              <div class="flex-box chat-box between" style="cursor: pointer;" 
+            onclick='location.href="{% url 'dangun_app:selected_chatroom' chatroom.chatroom.id%}";'>
                 <div>
                   <div class="flex-box">
                     <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
