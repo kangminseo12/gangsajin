@@ -32,28 +32,49 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # 받은 메시지를 그룹 내의 모든 클라이언트에 전송합니다.
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        chatroom_id = text_data_json['chatroom_id']
-        sender_id = self.scope['user'].id
-        receiver_id = text_data_json['receiver_id']
-        sent_at = datetime.now().isoformat()
         
-        # chatroom_id로 ChatRoom 인스턴스를 가져옵니다.
-        chatroom = await self.get_chatroom(chatroom_id)
-        
-        # 메시지 -> 데이터베이스에 저장
-        await self.save_message(chatroom, sender_id, receiver_id, message)
+        # 1. '새로운 메시지' 이벤트인 경우
+        if text_data_json['type'] == "message_created":
+    
+            message = text_data_json['message']
+            chatroom_id = text_data_json['chatroom_id']
+            sender_id = self.scope['user'].id
+            receiver_id = text_data_json['receiver_id']
+            sent_at = datetime.now().isoformat()
+            
+            # chatroom_id로 ChatRoom 인스턴스를 가져옵니다.
+            chatroom = await self.get_chatroom(chatroom_id)
+            
+            # 메시지 -> 데이터베이스에 저장
+            await self.save_message(chatroom, sender_id, receiver_id, message)
 
-        # room group에 메시지 전달
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'sender_id': sender_id,
-                'sent_at': sent_at
-            }
-        )
+            # room group에 메시지 전달
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                    'sender_id': sender_id,
+                    'sent_at': sent_at
+                }
+            )
+
+        # 2. '메시지 읽음' 이벤트인 경우
+        if text_data_json['type'] == "page_visible":
+            
+            chatroom_id = text_data_json['chatroom_id']
+            user_id = self.scope['user'].id
+            
+            # (데이터베이스) 메시지 -> '읽음'으로 업데이트
+            await self.update_messages(chatroom_id, user_id)
+
+            # room group에 이벤트 전달
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'read_message',
+                }
+            )
 
     # 그룹 내의 모든 사용자에게 메시지를 브로드캐스트하기 위해 호출됩니다.
     # 'receive' 함수에서 room group에 메시지를 전송할 때, 아래 chat_message 함수가 메시지를 실제로 브로드캐스트 하는 역할을 한다고 합니다.
@@ -63,18 +84,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sent_at = event['sent_at']
 
         await self.send(text_data=json.dumps({
+            'type' : 'chat_message',
             'message': message,
             'sender_id': sender_id,
             'sent_at': sent_at
         }))
 
-    # 메시지 형식에 맞춰 데이터베이스에 저장합니다
-    @database_sync_to_async
-    def save_message(self, chatroom_id, sender_id, receiver_id, message):
-        Message.objects.create(chatroom=chatroom_id, sender=sender_id, receiver=receiver_id, content=message)
+    # 메시지가 '읽음' 처리되었음을 알리기 위해 호출됩니다.
+    async def read_message(self, event):
+        await self.send(text_data=json.dumps({
+            'type' : 'read_message'
+        }))
 
     # chatroom의 id로 chatroom 인스턴스를 가져옵니다.
     @database_sync_to_async        
     def get_chatroom(self, chatroom_id):
         return ChatRoom.objects.get(id=chatroom_id)
+    
+    # 메시지 형식에 맞춰 데이터베이스에 저장합니다
+    @database_sync_to_async
+    def save_message(self, chatroom_id, sender_id, receiver_id, message):
+        Message.objects.create(chatroom=chatroom_id, sender=sender_id, receiver=receiver_id, content=message)
 
+    # 수신자가 현재 로그인한 사용자인 메시지를 모두 '읽음'으로 처리합니다.
+    @database_sync_to_async
+    def update_messages(self, chatroom_id, user_id):
+        messages = Message.objects.filter(chatroom=chatroom_id, receiver=user_id)
+        messages.update(is_read=True)
