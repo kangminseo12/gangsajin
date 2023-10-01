@@ -13,6 +13,8 @@ from user_app.models import CustomUser
 from django.utils.translation import gettext_lazy as _
 from .forms import PostForm
 
+from datetime import datetime
+
 # 포스팅
 import uuid
 

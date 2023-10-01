@@ -28,6 +28,8 @@
               </div>
               {% comment %} {% if request.user.id == post.author_id %} {% endcomment %}
               {% if post.author_id == user.id %}
+            {{user.id}}
+            {{ post.author_id}}
                 <div class="flex-box button-box">
                   <a href="{% url 'dangun_app:edit' post.id %}">
                     <button class="grey">수정하기</button>
@@ -35,11 +37,12 @@
                   <button class="orange">채팅보기</button>
                 </div>
               {% else %}
-                <div class="button-box">
-                  <a href="{% url 'dangun_app:chatroom' %}">
-                    <button class="orange">채팅하기</button>
-                  </a>
-                </div>
+                <form action={% url "dangun_app:create_chatroom" post.id %} method="POST">
+                    {% csrf_token %}
+                    <div class="button-box">
+                        <button class="orange">채팅하기</button>
+                    </div>
+                </form>
               {% endif %}
             </div>
             <hr class="line">
