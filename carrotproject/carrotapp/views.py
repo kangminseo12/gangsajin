@@ -278,7 +278,6 @@ def chat_bot(request):
 
     return render(request, "dangun_app/chat_bot.html", context)
 
-openai.api_key = "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"
 
 def auto(request):
     if request.method == "POST":
