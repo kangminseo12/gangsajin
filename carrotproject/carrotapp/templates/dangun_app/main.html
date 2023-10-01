@@ -26,7 +26,7 @@
               <img src="{% static 'img/icon_appstore.png' %}" alt=""/>App Store</button>
           </div>
         </div>
-        <img src="{% static 'img/character.png' %}" alt=""/>
+        <img src="{% static 'img/oreumi-long.png' %}" alt=""/>
       </div>
     </div>
     <div class="content-box section2">
@@ -89,8 +89,8 @@
             <div class="card-box">
               <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
                 <div class="card-img">
-                  {% if post.images %}
-                    <img src="{{ post.images.url }}" alt="{{ post.title }}">
+                  {% if post.thumbnail %}
+                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
                   {% endif %}
                 </div>
                 <div class="card-info-box">
@@ -99,10 +99,10 @@
                   <p>{{ post.location }}</p>
                   <div class="flex-box">
                     <p>조회
-                      {{ post.view_num }}</p>
+                      {{ post.view }}</p>
                     <p>·</p>
                     <p>채팅
-                      {{ post.chat_num }}</p>
+                      {{ post.chat_id }}</p>
                   </div>
                 </div>
               </a>

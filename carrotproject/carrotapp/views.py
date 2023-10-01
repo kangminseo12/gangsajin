@@ -19,24 +19,28 @@ import uuid
 
 # Create your views here.
 
+
 def main(request):
-    list_post = PostProduct.objects.filter(status="N").order_by('-view')
-    return render(request, "dangun_app/main.html", {'posts': list_post})
+    list_post = PostProduct.objects.filter(status="N").order_by("-view")
+    return render(request, "dangun_app/main.html", {"posts": list_post})
 
 
 def trade(request):
-    top_views_posts = PostProduct.objects.filter(status="N").order_by('-view')
-    return render(request, 'dangun_app/trade.html', {'posts': top_views_posts})
+    top_views_posts = PostProduct.objects.filter(status="N").order_by("-view")
+    return render(request, "dangun_app/trade.html", {"posts": top_views_posts})
+
 
 def search(request):
     search_data = request.GET.get("search")
-    search_list = PostProduct.objects.filter(Q(title__icontains=search_data)|Q(location__icontains=search_data)) 
-    return render(request, "dangun_app/search.html", {'posts': search_list})
+    search_list = PostProduct.objects.filter(
+        Q(title__icontains=search_data) | Q(location__icontains=search_data)
+    )
+    return render(request, "dangun_app/search.html", {"posts": search_list})
 
 
 @login_required
 def write(request, post_id=None):
-    if request.user.location != "Y":
+    if request.user.location != "인증필요":
         return redirect("dangun_app:alert", alert_message=_("동네인증이 필요합니다."))
 
     post = None
@@ -62,7 +66,7 @@ def edit(request, id):
         if "thumbnail" in request.FILES:
             post.thumbnail = request.FILES["thumbnail"]
         post.save()
-        return redirect("dangun_app:trade_post", pk=id)
+        return redirect("dangun_app:trade_post", post_id=id)
 
     return render(request, "dangun_app/write.html", {"post": post})
 
@@ -139,7 +143,7 @@ def trade_post(request, post_id):
             post.delete()
             # 포스트페이지로 가는게 맞아서 나중에 바꿀것
             # return redirect('dangun_app/trade')
-            return render(request, "dangun_app/main_test.html")
+            return render(request, "dangun_app/main.html")
     #  조회수 증가
     post.view += 1
     post.save()
@@ -148,7 +152,7 @@ def trade_post(request, post_id):
         "post": post,
     }
 
-    return render(request, "dangun_app/trade_post_test.html", context)
+    return render(request, "dangun_app/trade_post.html", context)
 
 def create_chatroom(request, post_id):
     if request.method == "POST":
@@ -212,7 +216,7 @@ def get_chatrooms_context(request, user):
 @login_required
 def chatroom_list(request):
     user = request.user
-    
+
     # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
     chatrooms_context = get_chatrooms_context(request, user)
 
@@ -247,13 +251,12 @@ def chatroom(request, chatroom_id):
 
     # 템플릿에 전달할 데이터 정의
     context = {
-        'chatrooms' : chatrooms_context,
-        "selected_chatroom" : selected_chatroom,
-        "product" : product,
-        "chat_partner" : chat_partner,
-        "messages" : messages,
-        "ws_path" : ws_path,
+        "chatrooms": chatrooms_context,
+        "selected_chatroom": selected_chatroom,
+        "product": product,
+        "chat_partner": chat_partner,
+        "messages": messages,
+        "ws_path": ws_path,
     }
 
     return render(request, "dangun_app/chat.html", context)
-

@@ -29,12 +29,12 @@ def custom_login(request):
                     login(request, user) 
                     return redirect('dangun_app:main')
             else:
-                return render(request,"registration/login_test.html",{'form':form})
+                return render(request,"registration/login.html",{'form':form})
                 
     # 아니라면 GET요청이 온다
         else:
             form = CustomLoginForm()
-    return render(request,"registration/login_test.html", {'form':form})
+    return render(request,"registration/login.html", {'form':form})
 
 def register(request):
 
