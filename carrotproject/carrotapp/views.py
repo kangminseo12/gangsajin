@@ -62,6 +62,10 @@ def add_comment(request, post_id):
     # 댓글 작성에 실패하면 여기로 돌아갈 수 있도록 설정할 수 있습니다.
     return redirect(reverse('dangun_app:trade_post', args=[post_id]))
 
+def userset(request):
+    return render(request, "dangun_app/user-set.html")
+
+
 # 거래글 작성
 @login_required
 def write(request, post_id=None):

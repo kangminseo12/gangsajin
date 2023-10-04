@@ -1,4 +1,4 @@
-nav{
+nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -13,60 +13,93 @@ nav{
     padding: 14px 0;
 }
 
-.logo{
+.logo {
     margin-right: 68px;
 }
 
-.nav-buttons{
+.nav-buttons {
     display: flex;
     gap: 20px;
 }
 
-.nav-buttons a button{
+.nav-buttons a button {
     font-size: 18px;
     border: none;
     background-color: transparent;
     font-weight: 700;
     display: inline-block;
-     white-space: nowrap;
+    white-space: nowrap;
 
 }
 
-.ghost-button{
+.ghost-button {
     font-size: 16px;
     padding: 6px 16px;
     text-decoration: none;
     border: 1px solid #d7d7d7;
-    display: inline-block; 
+    display: inline-block;
     white-space: nowrap;
 }
 
-.orange{
+.orange {
     color: #fa6616;
     border: 1px solid #fa6616;
 }
 
-input{
+.user-button {
+    padding: 6px 16px;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    color: #fa6616;
+    background-color: #fff;
+    border: none;
+}
+
+.user-button .original-text {
+    display: inline;
+    /* 기본적으로 .original-text 요소 보임 */
+}
+
+.user-button .edit-text {
+    display: none;
+    /* 기본적으로 .edit-text 요소 숨김 */
+}
+
+.user-button:hover .original-text {
+    display: none;
+    /* .user-button 위에 마우스 커서가 올라갔을 때 .original-text 요소 숨김 */
+}
+
+.user-button:hover .edit-text {
+    display: inline;
+    /* .user-button 위에 마우스 커서가 올라갔을 때 .edit-text 요소 보임 */
+}
+
+
+input {
     background-color: #f3f3f3;
-    padding:6px 16px;
+    padding: 6px 16px;
     font-size: 16px;
     border: none;
 }
 
-.orange-text{
+.orange-text {
     color: #fa6616;
-    
+
 }
 
 
-@media (max-width: 767px){
-    .logo{
+@media (max-width: 767px) {
+    .logo {
         margin-right: 2px;
     }
-    #search{
+
+    #search {
         background-color: #f3f3f3;
         width: 100px;
     }
+
     #search::placeholder {
         color: #f3f3f3;
     }
