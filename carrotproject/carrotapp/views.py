@@ -28,6 +28,11 @@ def main(request):
     return render(request, "dangun_app/main.html", {"posts": list_post})
 
 
+# Alert용 화면
+def alert(request, alert_message):
+    return render(request, "dangun_app/alert.html", {"alert_message": alert_message})
+
+
 def trade(request):
     top_views_posts = PostProduct.objects.filter(status="N").order_by("-view")
     return render(request, "dangun_app/trade.html", {"posts": top_views_posts})
@@ -41,9 +46,10 @@ def search(request):
     return render(request, "dangun_app/search.html", {"posts": search_list})
 
 
+# 거래글 작성
 @login_required
 def write(request, post_id=None):
-    if request.user.location != "인증필요":
+    if request.user.location == "인증필요" or request.user.location_v == "N":
         return redirect("dangun_app:alert", alert_message=_("동네인증이 필요합니다."))
 
     post = None
@@ -69,7 +75,7 @@ def edit(request, id):
         if "thumbnail" in request.FILES:
             post.thumbnail = request.FILES["thumbnail"]
         post.save()
-        return redirect("dangun_app:trade_post", pk=id)
+        return redirect("dangun_app:trade_post", post_id=id)
 
     return render(request, "dangun_app/write.html", {"post": post})
 
@@ -83,7 +89,7 @@ def create_post(request):
             post = form.save(commit=False)  # 임시 저장
             post.author_id = request.user.id
             post.username = request.user.nickname  # 작성자 정보 추가 (이 부분을 수정했습니다)
-            post.chat_id = uuid.uuid4().int & (1 << 63) - 1  # chat_id 부여
+            # post.chat_id = uuid.uuid4().int & (1 << 63) - 1  # chat_id 부여
             post.save()  # 최종 저장
             return redirect("dangun_app:trade_post", post_id=post.pk)  # 저장 후 상세 페이지로 이동
         else:
@@ -97,7 +103,6 @@ def create_post(request):
 @login_required
 def location(request):
     region = request.user.location
-
     return render(request, "dangun_app/location.html", {"region": region})
 
 
@@ -127,7 +132,7 @@ def set_region(request):
 def set_region_certification(request):
     if request.method == "POST":
         custom_user = request.user
-        # custom_user.location = "Y"
+        custom_user.location_v = "Y"
 
         custom_user.save()
 
@@ -294,6 +299,9 @@ def chat_bot(request):
     }
 
     return render(request, "dangun_app/chat_bot.html", context)
+
+
+openai.api_key = "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"
 
 
 def auto(request):

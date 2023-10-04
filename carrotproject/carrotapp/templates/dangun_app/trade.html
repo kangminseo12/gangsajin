@@ -50,7 +50,8 @@
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
                   <p class="bold">{{ post.price }}원</p>
-                  <p>{{ post.location }}</p>
+                  <p>{{ post.location|slice:":12" }}</p>
+                  {% comment %} | slice 로 작동할수있다니 놀랍다 {% endcomment %}
                   <div class="flex-box">
                     <p>조회
                       {{ post.view }}</p>
