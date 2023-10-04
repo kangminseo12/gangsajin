@@ -143,6 +143,12 @@
   {{ selected_chatroom.id|json_script:"selected-chatroom-id" }}
   {{ chat_partner.id|json_script:"chat-partner-id" }}
   <script>
+
+    //채팅바 항상 아래로
+    const chatLog = document.querySelector('.chat-container');
+    chatLog.scrollTop = chatLog.scrollHeight;
+
+
     const chatSocket = new WebSocket("ws://" + window.location.host + "{{ ws_path }}" + '/');
 
     // WebSocket 연결 이벤트 리스너
@@ -219,6 +225,8 @@
           'receiver_id': receiverId
         }));
         messageInputDom.value = '';
+        setTimeout(function() {
+        chatLog.scrollTop = chatLog.scrollHeight;}, 2000);
       })
 
       // '엔터'로 보내기
@@ -241,7 +249,10 @@
             'receiver_id': receiverId
           }));
           messageInputDom.value = '';
+          setTimeout(function() {
+        chatLog.scrollTop = chatLog.scrollHeight;}, 2000);
         }
+        
       });
 
 
@@ -265,7 +276,12 @@
           chatSocket.send(JSON.stringify({ type: 'page_hidden', message: 'The page is now hidden' }));
         }
       })
+
     })
+
+
+
+
   </script>
   <script>
     // '안읽은 메시지만 보기' 체크박스 상태 처리
