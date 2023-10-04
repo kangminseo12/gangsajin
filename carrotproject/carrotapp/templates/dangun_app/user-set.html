@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/userset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <title>동네인증</title>
+  </head>
+
+  <body class="back-ye">
+    {% include 'dangun_app/nav.html' %}
+    <div class="content-box">
+      <div class="container column center">
+        <div class="user-setting-box full-box">
+          <label for="user-setting">Nickname 설정</label>
+          <form method="POST" action="/set_region/" id="region-form">
+            {% csrf_token %}
+            <div class="flex-box full-box between region-input">
+              <input type="text" id="region-setting" class="region-setting" name="region-setting"
+              placeholder="현재 Nickname : {{user.nickname}}" value="{{ nickname }}">
+              <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
+                수정</button>
+            </div>
+          </form>
+        </div>
+        <div class="user-setting-box full-box">
+            <label for="user-setting">E-Mail 설정</label>
+            <form method="POST" action="/set_region/" id="region-form">
+              {% csrf_token %}
+              <div class="flex-box full-box between region-input">
+                <input type="text" id="region-setting" class="region-setting" name="region-setting"
+                placeholder="현재 E-Mail : {{user.email}}" value="{{ email }}">
+                <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
+                  수정</button>
+              </div>
+            </form>
+          </div>
+      </div>
+    </div>
+    {% include 'dangun_app/footer.html' %}
+  </body>
+
+</html>

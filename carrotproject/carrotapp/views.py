@@ -46,6 +46,10 @@ def search(request):
     return render(request, "dangun_app/search.html", {"posts": search_list})
 
 
+def userset(request):
+    return render(request, "dangun_app/user-set.html")
+
+
 # 거래글 작성
 @login_required
 def write(request, post_id=None):

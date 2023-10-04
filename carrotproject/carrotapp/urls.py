@@ -9,6 +9,7 @@ urlpatterns = [
     path("", views.main, name="main"),
     path("trade/", views.trade, name="trade"),
     path("trade/<int:post_id>", views.trade_post, name="trade_post"),
+    path("userset", views.userset, name="userset"),
     path("alert/<str:alert_message>/", views.alert, name="alert"),
     path("wirte/", views.write, name="write"),
     path("edit/<int:id>/", views.edit, name="edit"),
