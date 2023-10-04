@@ -105,25 +105,28 @@
 
             <!--채팅창 메인-->
             <div class="chat-container">
-              {% if messages %}
-              {% for message in messages %}
-              {% if message.sender == user.id %}
-              <div class="message-box from-me">
-                {% if message.is_read == False %}
-                <span class="is-read"> ● </span>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.sender == user.id %}
+                <div class="message-box from-me">
+                    {% if message.is_read == False %}
+                    <span class="is-read"> ● </span>
+                    {% endif %}
+                    <p class="s-text">{{ message.sent_at }}</p>
+                    <div class="message-text">{{ message.content }}</div>
+                </div>
+                {% else %}
+                <div class="message-box from-you">
+                    <div class="message-text">{{ message.content }}</div>
+                    <p class="s-text">{{ message.sent_at }}</p>
+                    {% if message.is_read == False %}
+                      <span class="is-read"> ● </span>
+                    {% endif %}
+                </div>
                 {% endif %}
-                <p class="s-text">{{ message.sent_at }}</p>
-                <div class="message-text">{{ message.content }}</div>
-              </div>
-              {% else %}
-              <div class="message-box from-you">
-                <div class="message-text">{{ message.content }}</div>
-                <p class="s-text">{{ message.sent_at }}</p>
-              </div>
-              {% endif %}
-              {% endfor %}
-              {% endif %}
-              <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
+                {% endfor %}
+                {% endif %}
+                <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
             </div>
           </div>
           <form class="chat-input">
@@ -154,6 +157,17 @@
     // WebSocket 연결 이벤트 리스너
     chatSocket.onopen = function () {
       console.log("WebSocket 연결이 열렸습니다.");
+
+      // 웹소켓이 연결되면 메시지 '읽음' 이벤트를 서버로 보냅니다
+      let chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
+      let readerId = JSON.parse({{ user.id }})
+
+      chatSocket.send(JSON.stringify({
+        'type': 'page_loaded',
+        'message': 'The page is now loaded',
+        'chatroom_id': chatRoomId,
+        'reader_id': readerId
+      }));
     };
 
     // WebSocket 연결 종료 이벤트 리스너
@@ -161,7 +175,7 @@
       console.log("WebSocket 연결이 종료되었습니다.");
     };
 
-    // 메시지 수신 처리
+    // 이벤트 수신 처리
     chatSocket.onmessage = function (event) {
       const data = JSON.parse(event.data);
 
@@ -188,21 +202,45 @@
           messageElement.appendChild(sentAtElement);
           messageElement.appendChild(messageTextElement);
         } else {
+          let isReadElement = document.createElement('span');
+          isReadElement.classList.add('is-read');
+          isReadElement.textContent = ' ● '
           messageElement.classList.add('message-box', 'from-you');
           messageElement.appendChild(messageTextElement);
           messageElement.appendChild(sentAtElement);
+          messageElement.appendChild(isReadElement);
         }
         chatContainer.appendChild(messageElement);
       
       };
 
+      // 메시지 '읽음' 이벤트일 경우
       if (data.type === 'read_message') {
-        isReadElements = document.getElementsByClassName('is-read');
-        Array.from(isReadElements).forEach(element => {
-          element.remove();
-        });
-      };
+        
+        // 상대가 보낸 메시지를 내가 읽을 경우
+        let messageElements = document.getElementsByClassName('from-you');
+        if (data.reader_id === {{ user.id }}) {
+          Array.from(messageElements).forEach(messageElement => {
+            let isReadElement = messageElement.querySelector('.is-read');
+            if (isReadElement != null) {
+              isReadElement.remove();
+            }
+          })
+        }
+
+        // 내가 보낸 메시지를 상대가 읽을 경우
+        messageElements = document.getElementsByClassName('from-me');
+        if (data.reader_id === {{ chat_partner.id }}) {
+          Array.from(messageElements).forEach(messageElement => {
+            let isReadElement = messageElement.querySelector('.is-read');
+            if (isReadElement != null) {
+              isReadElement.remove();
+            }
+          })
+        }
+      }
     };
+
     // chatSocket으로 메시지 전달
     // 문서가 완전히 로드된 후에 이벤트 리스너를 추가함
     document.addEventListener("DOMContentLoaded", function () {
@@ -252,36 +290,49 @@
           setTimeout(function() {
         chatLog.scrollTop = chatLog.scrollHeight;}, 2000);
         }
-        
       });
 
-
-      // 웹소켓으로 메시지 '읽음' 여부 보내기
+      // 페이지 활성화되었을 때 웹소켓으로 메시지 '읽음' 여부 보내기
       document.addEventListener('visibilitychange', function () {
-        // 페이지가 활성화되었을 때 (브라우저에서 채팅방이 있는 탭을 보고 있을 때)
         if (document.visibilityState === 'visible') {
           console.log('Page is now visible');
-
+          
           let chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
+          let readerId = JSON.parse({{ user.id }})
 
           chatSocket.send(JSON.stringify({
             'type': 'page_visible',
             'message': 'The page is now visible',
-            'chatroom_id': chatRoomId
+            'chatroom_id': chatRoomId,
+            'reader_id': readerId
           }));
-        }
-        // 페이지가 비활성화되었을 때 (브라우저에서 다른 탭을 보고 있을 때)
-        else if (document.visibilityState === 'hidden') {
-          console.log('Page is now hidden');
-          chatSocket.send(JSON.stringify({ type: 'page_hidden', message: 'The page is now hidden' }));
         }
       })
 
+      // 페이지가 클릭되었을 때 웹소켓으로 메시지 '읽음' 여부 보내기
+      document.addEventListener("click", function(event) {
+        
+        // 특정 요소를 클릭했을 때는 이벤트 처리를 중단합니다.
+        let clickedElement = event.target;
+        if (clickedElement.classList.contains('ignore-page-clicked')) {
+            return
+        }
+        
+        console.log('Page is clicked');
+        
+        let chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
+        let readerId = JSON.parse({{ user.id }})
+
+        chatSocket.send(JSON.stringify({
+          'type': 'page_clicked',
+          'message': 'The page is clicked',
+          'chatroom_id': chatRoomId,
+          'reader_id': readerId
+        }));
+      })
     })
 
-
-
-
+    
   </script>
   <script>
     // '안읽은 메시지만 보기' 체크박스 상태 처리
