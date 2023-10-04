@@ -11,7 +11,7 @@ from .models import PostProduct, ChatRoom, Message, Category, Comment
 
 from user_app.models import CustomUser
 from django.utils.translation import gettext_lazy as _
-from .forms import PostForm,CommentForm
+from .forms import PostForm, CommentForm
 
 from datetime import datetime
 from django.urls import reverse
@@ -28,8 +28,10 @@ def main(request):
     list_post = PostProduct.objects.filter(status="N").order_by("-view")
     return render(request, "dangun_app/main.html", {"posts": list_post})
 
+
 def alert(request, alert_message):
     return render(request, "dangun_app/alert.html", {"alert_message": alert_message})
+
 
 def trade(request):
     top_views_posts = PostProduct.objects.filter(status="N").order_by("-view")
@@ -43,10 +45,11 @@ def search(request):
     )
     return render(request, "dangun_app/search.html", {"posts": search_list})
 
+
 def add_comment(request, post_id):
     post = get_object_or_404(PostProduct, id=post_id)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -55,15 +58,40 @@ def add_comment(request, post_id):
             comment.save()
 
             # 댓글을 저장한 후 해당 게시물 상세 페이지로 리디렉션
-            return redirect(reverse('dangun_app:trade_post', args=[post_id]))
+            return redirect(reverse("dangun_app:trade_post", args=[post_id]))
     else:
         form = CommentForm()
 
     # 댓글 작성에 실패하면 여기로 돌아갈 수 있도록 설정할 수 있습니다.
-    return redirect(reverse('dangun_app:trade_post', args=[post_id]))
+    return redirect(reverse("dangun_app:trade_post", args=[post_id]))
 
+
+@login_required  # 회원정보 수정
 def userset(request):
-    return render(request, "dangun_app/user-set.html")
+    if request.method == "POST":
+        nickname = request.POST.get("nickname-setting")
+        email = request.POST.get("email-setting")
+
+        if nickname:
+            try:
+                user_profile = request.user
+                user_profile.nickname = nickname
+                user_profile.save()
+                messages.success(request, "Nickname updated.")
+            except Exception as e:
+                messages.error(request, str(e))
+
+        if email:
+            try:
+                user_profile = request.user
+                user_profile.email = email
+                user_profile.save()
+                messages.success(request, "Email updated.")
+            except Exception as e:
+                messages.error(request, str(e))
+    user_posts = PostProduct.objects.filter(author=request.user)
+
+    return render(request, "dangun_app/user-set.html", {"user_posts": user_posts})
 
 
 # 거래글 작성
@@ -79,7 +107,7 @@ def write(request, post_id=None):
         except PostProduct.DoesNotExist:
             pass
 
-    context = {'categories': Category.objects.all(), 'post':post}
+    context = {"categories": Category.objects.all(), "post": post}
 
     return render(request, "dangun_app/write.html", context)
 
@@ -98,7 +126,7 @@ def edit(request, post_id):
             post.thumbnail = request.FILES["thumbnail"]
         post.save()
         return redirect("dangun_app:trade_post", pk=post_id)
-    context = {'categories': Category.objects.all(), 'post':post}
+    context = {"categories": Category.objects.all(), "post": post}
 
     return render(request, "dangun_app/write.html", context)
 
@@ -177,12 +205,12 @@ def trade_post(request, pk):
     #  조회수 증가
     post.view += 1
     post.save()
-    comments = Comment.objects.filter(post=post).order_by('-created_date')
+    comments = Comment.objects.filter(post=post).order_by("-created_date")
 
     context = {
         "post": post,
-        'comments': comments,
-        'form': CommentForm(),
+        "comments": comments,
+        "form": CommentForm(),
     }
 
     return render(request, "dangun_app/trade_post.html", context)
@@ -325,7 +353,9 @@ def chat_bot(request):
 
     return render(request, "dangun_app/chat_bot.html", context)
 
+
 openai.api_key = ""
+
 
 def auto(request):
     if request.method == "POST":
@@ -349,12 +379,10 @@ def auto(request):
 
 def deal_done(request, post_id, buyier_id):
     post = get_object_or_404(PostProduct, pk=post_id)
-    
+
     post.buyier_id = buyier_id
-    post.status = 'Y'
+    post.status = "Y"
     post.save()
-    
+
     # 거래가 확정되면 새로고침
-    return redirect('dangun_app:trade_post', pk=post_id)
-
-
+    return redirect("dangun_app:trade_post", pk=post_id)
