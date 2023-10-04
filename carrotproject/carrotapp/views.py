@@ -215,20 +215,21 @@ def trade_post(request, pk):
 
     return render(request, "dangun_app/trade_post.html", context)
 
-
+# 채팅방 생성
 def create_chatroom(request, post_id):
     if request.method == "POST":
         host = PostProduct.objects.get(id=post_id).author_id
         guest = request.user.id
 
-        # 채팅방 생성
-        newchatroom = ChatRoom.objects.create(chat_host=host, chat_guest=guest, product_id=post_id)
-        newchatroom.save()
+        # 채팅방 생성 (이미 있을 경우 해당 채팅방 불러옴)
+        chatroom, is_created = ChatRoom.objects.get_or_create(chat_host=host, chat_guest=guest, product_id=post_id)
+        if is_created == True:
+            chatroom.save()
 
         # 채팅화면으로 보냄
-        return redirect("dangun_app:selected_chatroom", chatroom_id=newchatroom.id)
+        return redirect("dangun_app:selected_chatroom", chatroom_id=chatroom.id)
 
-
+# 채팅방 목록 정보 불러오기
 def get_chatrooms_context(request, user):
     # 현재 로그인한 사용자가 chat_host 또는 chat_guest인 ChatRoom을 검색
     chatrooms = ChatRoom.objects.filter(Q(chat_host=user.id) | Q(chat_guest=user.id))
@@ -283,7 +284,7 @@ def get_chatrooms_context(request, user):
 
     return chatrooms_context
 
-
+# 채팅방 목록 띄우기
 @login_required
 def chatroom_list(request):
     user = request.user
@@ -301,13 +302,12 @@ def chatroom_list(request):
         {"chatrooms": chatrooms_context, "not_read_only": not_read_only},
     )
 
-
+# 채팅 내용 띄우기
 @login_required
 def chatroom(request, chatroom_id):
     user = request.user
 
     # 참여하고 있는 채팅방 목록 및 관련 정보 불러오기
-
     chatrooms_context = get_chatrooms_context(request, user)
 
     # 클릭한 채팅방 및 채팅 상대방에 대한 정보
@@ -321,11 +321,13 @@ def chatroom(request, chatroom_id):
     product = PostProduct.objects.get(id=selected_chatroom.product_id)
 
     # 주고받은 채팅(메시지) 기록 불러오기
-
     messages = Message.objects.filter(chatroom=chatroom_id).order_by("sent_at")
 
     # WebSocket 연결을 위한 주소
     ws_path = f"/ws/chat/{selected_chatroom.id}"
+
+    # 안읽은 메시지만 보기 상태값
+    not_read_only = request.GET.get("not-read-only") == "true"
 
     # 템플릿에 전달할 데이터 정의
     context = {
@@ -335,6 +337,7 @@ def chatroom(request, chatroom_id):
         "chat_partner": chat_partner,
         "messages": messages,
         "ws_path": ws_path,
+        "not_read_only": not_read_only,
     }
 
     return render(request, "dangun_app/chat.html", context)
