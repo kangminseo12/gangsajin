@@ -1,0 +1,150 @@
+{% load static %}
+{% load custom_timesince %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/test.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/footer.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}"/>
+    <title>채팅하기</title>
+  </head>
+
+  <body class="back-ye">
+    {% include 'dangun_app/nav.html' %}
+    <div class="content-box">
+      <div class="container column">
+        <div class="post-box flex-box">
+
+          <!-- 채팅선택창 -->
+          <div class="chat-select-container">
+            <div class="flex-box">
+
+              <!-- 아이디및 체크박스 -->
+              <div class="id-box flex-box between">
+                아이디
+                <div>
+                  <label>
+                    안읽은 메세지만 보기
+                    <input type="checkbox" name="" id="">
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 채팅 리스트 -->
+            <div class="chat-list-box flex-box column">
+              <!-- 봇 -->
+              <div class="chat-box flex-box" style="cursor: pointer;" onclick='location.href="{% url 'dangun_app:chat_bot' %}";'>
+                <div class="ai-profile">
+                  <img src="{% static 'img/icon_aibot.png'%}" alt="">
+                </div>
+                <div>
+                  <p class="bold">AI 챗봇</p>
+                  <p class="chat-thumb-text">궁금한 내용을 물어보세요!</p>
+                </div>
+              </div>
+              <!-- 채팅방리스트 -->
+              {% if chatrooms %}
+              {% for chatroom in chatrooms %}
+              <div class="flex-box chat-box between" style="cursor: pointer;" 
+            onclick='location.href="{% url 'dangun_app:selected_chatroom' chatroom.chatroom.id%}";'>
+                <div>
+                  <div class="flex-box">
+                    <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
+                    <p class="s-text">{{ chatroom.chat_partner.location }}</p>
+                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
+                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
+                    
+                  </div>
+                  <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
+                </div>
+                <div class="thumbnail-box">
+                  <img src="{{ chatroom.product.thumbnail.url }}" alt="{{ chatroom.product.title }}">
+                </div>
+              </div>
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          <!-- 채팅창-->          
+            <div class="chat-main-container">
+            <div>
+                <div class="contact-info flex-box">
+                    AI 챗봇
+                    <div class="temp">
+                        1
+                    </div>
+                </div>
+
+              <!--물품정보-->
+              <div class="goods-box flex-box between">
+                <div class="flex-box">
+                  <div class="selected-thumbnail-box">
+                    <img src="{% static 'img/icon_aibot.png'%}" alt="{% static 'img/icon_aibot.png'%}">
+                  </div>
+                  <div class="goods-info-box">
+                    <p>당근마켓</p>
+                    <p class="bold">AI 챗봇</p>
+                  </div>
+                </div>                
+              </div>
+
+              <!--채팅창 메인-->
+              
+              <div class="chat-container">                                        
+                
+                <!-- 이후 작성되는 메시지는 여기에 동적으로 추가됩니다 -->
+              </div>
+                
+            </div>
+            
+            <div class="chat-input">              
+              <textarea name="" id="message-textarea" cols="30" rows="10" placeholder="메세지를 입력해주세요"></textarea>             
+              <div>                
+                <button id="sendButton">
+                  전송
+                </button>
+              </div>
+            </div>
+          
+          </div>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+        </div>
+      </div>
+    </div>
+    {% include 'dangun_app/footer.html' %}
+    
+    <!-- script -->
+    {{ selected_chatroom.id|json_script:"selected-chatroom-id" }}
+    {{ chat_partner.id|json_script:"chat-partner-id" }}   
+    <script>
+      var csrfToken = "{{ csrf_token }}";
+    </script>
+    <script type="text/javascript" src="{% static 'js/chat_bot.js' %}"></script>     
+    
+  </body>
+
+</html>
