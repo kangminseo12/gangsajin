@@ -35,3 +35,37 @@
 .region-input button {
     padding: 14px;
 }
+
+/* user-post css */
+.user-posting-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.trade-text-link {
+    text-decoration: none;
+    /* 링크의 밑줄 제거 */
+    color: inherit;
+    /* 링크 색상을 상위 요소와 동일하게 설정 */
+}
+
+.post {
+    width: calc((100% / 3) - (20px * 2));
+    /* 화면 너비의 세분의 일로 설정, 좌우 마진 고려 */
+    margin: 20px;
+    /* 각 포스트 사이에 여백 추가 */
+    display: flex;
+    align-items: center;
+}
+
+.card-img {
+    width: 150px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.card-img img {
+    width: 100%;
+    height: auto;
+}

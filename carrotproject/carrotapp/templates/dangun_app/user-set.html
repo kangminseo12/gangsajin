@@ -19,28 +19,48 @@
       <div class="container column center">
         <div class="user-setting-box full-box">
           <label for="user-setting">Nickname 설정</label>
-          <form method="POST" action="/set_region/" id="region-form">
+          <form method="POST" action="/user-set/" id="nickname-form">
             {% csrf_token %}
             <div class="flex-box full-box between region-input">
-              <input type="text" id="region-setting" class="region-setting" name="region-setting"
-              placeholder="현재 Nickname : {{user.nickname}}" value="{{ nickname }}">
-              <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
+              <input type="text" id="nickname-setting" class="region-setting" name="nickname-setting"
+              placeholder="현재 Nickname : {{user.nickname}}" value="{{ nickname }}"required>
+              <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-nickname-button">
                 수정</button>
             </div>
           </form>
         </div>
+        
         <div class="user-setting-box full-box">
-            <label for="user-setting">E-Mail 설정</label>
-            <form method="POST" action="/set_region/" id="region-form">
-              {% csrf_token %}
-              <div class="flex-box full-box between region-input">
-                <input type="text" id="region-setting" class="region-setting" name="region-setting"
-                placeholder="현재 E-Mail : {{user.email}}" value="{{ email }}">
-                <button type="submit" class="ghost-button orange region-setting" style="width:15%" id="set-region-button">
-                  수정</button>
+          <label for="user-setting">E-Mail 설정</label>
+          <form method="POST" action="/user-set/" id="email-form">
+            {% csrf_token %}
+            <div class="flex-box full-box between region-input">
+              <input type="text" id="email-settings" class="region-setting" name="email-setting" 
+              placeholder="현재 E-Mail : {{user.email}}" value="{{ email }}"required>
+              <button type="submit" class="ghost-button orange region-setting" style='width:15%' id="set-email-button">
+                수정</button> 
+           </div> 
+          </form> 
+        </div>
+        <div class="user-posting-box">
+          <label for="user-setting">내 게시물</label>
+          {% for post in user_posts %}
+          <div class="post">
+            <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
+              <div class="card-img">
+                {% if post.thumbnail %}
+                  <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                {% endif %}
               </div>
-            </form>
-          </div>
+              <h5>{{ post.title }}</h5>
+              <p class="bold">{{ post.price }}원</p>
+              <p>{{ post.location|slice:":12" }}</p>
+            </div>
+            </a>
+            {% empty %}
+            <p>게시글이 없어용^-^</p>
+          {% endfor %}
+        </div>     
       </div>
     </div>
     {% include 'dangun_app/footer.html' %}
