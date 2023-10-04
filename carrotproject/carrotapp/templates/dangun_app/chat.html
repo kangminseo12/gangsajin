@@ -96,8 +96,12 @@
                   <p class="bold">{{ product.price }}</p>
                 </div>
               </div>
-              <button>{{ product.status }}</button>
-            </div>
+              {% if user.id == product.author.id %}
+              <form method="post" action="{% url 'dangun_app:deal_done' product.id chat_partner.id %}">
+                {% csrf_token %}
+                <button type="submit">거래확정하기</button>
+              </form>
+              {% endif %}            </div>
 
             <!--채팅창 메인-->
             <div class="chat-container">

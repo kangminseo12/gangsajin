@@ -86,3 +86,61 @@ hr{
     opacity: 0.5;
     margin-top: 40px;
 }
+
+.image_tag {
+  position: relative;
+}
+.image_tag_text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate( -50%, -50% );
+  color: white;
+}
+
+
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+  }
+
+  /* 댓글 목록과 댓글 작성 폼 간의 간격을 늘림 */
+  .comments ul {
+    margin-bottom: 20px; /* 원하는 간격으로 조정 */
+  }
+
+  /* 댓글 작성 폼 요소들을 왼쪽으로 정렬 */
+  .comments form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+  }
+
+  .author {
+    display: inline; /* 인라인 요소로 표시 */
+    font-weight: 700; /* 원하는 스타일로 조정 */
+  }
+
+  .text {
+    display: inline; /* 인라인 요소로 표시 */
+    /* 원하는 스타일로 조정 */
+  }
+
+  .form-text{
+    margin-bottom: 10px;
+  }
+
+  .comment-button{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* 배경색 설정 */
+    color: #ffffff; /* 텍스트 색상 설정 */
+    border: none;
+    border-radius: 5px; /* 버튼 모서리 둥글게 만들기 */
+    font-size: 16px;
+    cursor: pointer; /* 커서를 포인터로 변경하여 클릭 가능한 상태로 표시 */
+    text-align: center;
+    text-decoration: none;
+  }

@@ -2,16 +2,30 @@ from django.conf import settings
 from django.db import models
 
 from django.contrib.auth.models import User
-from django.conf import settings
 from user_app.models import CustomUser
+from mptt.models import MPTTModel, TreeForeignKey
 
+
+
+# 계층 트리 구조 카테고리 추가 MPTTModel 이용
+class Category(MPTTModel):
+    name = models.CharField(verbose_name="카테고리 명", max_length=50, unique=True)
+    parent = TreeForeignKey('self', verbose_name="상위 카테고리", on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return self.name
+    
 
 # 포스트상품
 class PostProduct(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     buyier_id = models.CharField(max_length=32, blank=True)
-    category = models.CharField(max_length=64, default="선택안함")
+    category = TreeForeignKey(Category, verbose_name="카테고리", on_delete=models.CASCADE, db_index=True,default=1 )
     title = models.CharField(max_length=200)
+    # 물품정보는 현재 사용하지 않고 타이틀만 사용
     product = models.CharField(max_length=64, null=True, blank=True)
     description = models.TextField()
     price = models.IntegerField(default=0)
@@ -27,14 +41,7 @@ class PostProduct(models.Model):
         height_field=None,
         width_field=None,
         max_length=None,
-    )  # 경로 불러오는 것으로
-
-    # 나중에 카테고리에서 외래키로 가져올 수 있도로
-    # category = models.ForeignKey(
-    #         'category',
-    #         on_delete = models.CASCADE,
-    #         )
-
+    )  
 
 class ChatRoom(models.Model):
     id = models.AutoField(primary_key=True)
@@ -52,3 +59,9 @@ class Message(models.Model):
     content = models.TextField()
     sent_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+
+class Comment(models.Model):
+    post = models.ForeignKey(PostProduct, on_delete=models.CASCADE)
+    author = models.CharField(max_length=255, default="User")  # 기본값을 "User"로 설정
+    text = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)

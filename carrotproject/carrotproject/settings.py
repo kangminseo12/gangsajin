@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'carrotapp',
-    'user_app'
+    'user_app',
+    'mptt'
 ]
 
 MIDDLEWARE = [
@@ -193,3 +194,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # # 쿠키를 한시간만 저장 [ 세션 ]
 # SESSION_COOKIE_AGE = 3600
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS =['http://121.150.54.217:8000','http://121.150.54.217:8000/post/edit','http://121.150.54.217:8000/user/register','http://121.150.54.217:8000/user/login/','http://121.150.54.217:8000/trade','http://121.150.54.217']
+ 
+CSRF_COOKIE_SECURE = False
