@@ -38,7 +38,16 @@
                   <a href="{% url 'dangun_app:edit' post.id %}">
                     <button class="grey">수정하기</button>
                   </a>
-                  <button class="orange">채팅보기</button>
+                  <!-- 해당 상품에 대해 가장 최근 생성된 채팅방으로 이동하거나, 
+                    채팅방이 없을 경우 채팅 리스트화면을 보여줍니다. -->
+                  {% if recent_chatroom %}
+                    {% url 'dangun_app:selected_chatroom' recent_chatroom.id as chat_url %}
+                  {% else %}
+                    {% url 'dangun_app:chatroom' as chat_url %}
+                  {% endif %}
+                  <a href="{{ chat_url }}">
+                      <button class="orange">채팅보기</button>
+                  </a>
                 </div>
               {% else %}
                 <form action={% url "dangun_app:create_chatroom" post.id %} method="POST">
@@ -61,7 +70,7 @@
                 <p>희망 거래장소 |
                   {{ post.location }}</p>
                 <p>조회수
-                  {{ post.view }}</p>
+                  {{ post.view }}  ♡  {{ post.like }}</p> 
               </div>
             </div>
             <hr class="line">

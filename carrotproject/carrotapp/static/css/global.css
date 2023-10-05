@@ -78,6 +78,10 @@ h1 {
     line-height: 64px;
 }
 
+.semi-bold {
+    font-weight: 600;
+}
+
 .bold {
     font-weight: 700;
 }

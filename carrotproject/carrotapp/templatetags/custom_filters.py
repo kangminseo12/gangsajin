@@ -1,8 +1,10 @@
 from django import template
 from django.utils import timezone
+import os
 
 register = template.Library()
 
+# 커스텀 시간 필터
 @register.filter(name='custom_timesince')
 def custom_timesince(value):
     now = timezone.now()
@@ -24,3 +26,8 @@ def custom_timesince(value):
         return f"{minutes}분 전"
     else:
         return "방금 전"
+
+# 파일 존재 여부를 확인하는 커스텀 필터
+@register.filter(name='file_exists')
+def file_exists(file_path):
+    return os.path.exists(file_path)

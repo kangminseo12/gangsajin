@@ -1,5 +1,5 @@
 {% load static %}
-{% load custom_timesince %}
+{% load custom_filters %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,11 +28,11 @@
 
               <!-- 아이디및 체크박스 -->
               <div class="id-box flex-box between">
-                아이디
+                <p class="bold">{{ user.nickname }}</p>
                 <div>
                   <label>
                     안읽은 메세지만 보기
-                    <input type="checkbox" name="" id="">
+                    <input type="checkbox" name="not-read-only" id="not-read-only" value="true" {% if not_read_only %}checked{% endif %}>
                   </label>
                 </div>
               </div>
@@ -57,16 +57,24 @@
             onclick='location.href="{% url 'dangun_app:selected_chatroom' chatroom.chatroom.id%}";'>
                 <div>
                   <div class="flex-box">
-                    <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
+                    <p class="semi-bold">{{ chatroom.chat_partner.nickname }}</p>
                     <p class="s-text">{{ chatroom.chat_partner.location }}</p>
-                    <p class="s-text">{{ chatroom.message.sent_at }}</p>
-                    {% comment %} <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p> {% endcomment %}
-                    
+                    {% if chatroom.message %}
+                    <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p>
+                    {% endif %}
                   </div>
                   <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
                 </div>
                 <div class="thumbnail-box">
-                  <img src="{{ chatroom.product.thumbnail.url }}" alt="{{ chatroom.product.title }}">
+                {% if chatroom.product.thumbnail.url %}
+                    {% with thumbnail_path=chatroom.product.thumbnail.path %}
+                        {% if thumbnail_path|file_exists %}
+                            <img src="{{ chatroom.product.thumbnail.url }}" alt="{{ chatroom.product.title }}">
+                                {% else %}
+                            <img src="{% static 'img/oreumi-long.png' %}">
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
                 </div>
               </div>
               {% endfor %}
@@ -76,10 +84,10 @@
           <!-- 채팅창-->          
             <div class="chat-main-container">
             <div>
-                <div class="contact-info flex-box">
+                <div class="contact-info flex-box bold">
                     AI 챗봇
                     <div class="temp">
-                        1
+                        36.5°C
                     </div>
                 </div>
 
@@ -91,7 +99,7 @@
                   </div>
                   <div class="goods-info-box">
                     <p>당근마켓</p>
-                    <p class="bold">AI 챗봇</p>
+                    <p class="semi-bold">AI 챗봇</p>
                   </div>
                 </div>                
               </div>
@@ -113,25 +121,7 @@
                 </button>
               </div>
             </div>
-          
           </div>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
         </div>
       </div>
     </div>

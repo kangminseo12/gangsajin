@@ -19,13 +19,13 @@ h3{
     border: 1px solid #dedede;
     margin: 48px 0 0 0 ;
     align-items: stretch;
-    height: 580px;
+    height: 720px;
 }
 
 .post-box img{
     width: 100%;
     height: 380px;
-    object-fit: contain;
+    object-fit: cover;
     background-color: #dedede;
     border-radius: 12px;
 }
@@ -110,13 +110,34 @@ hr{
 }
 
 .chat-list-box{
-    width: 100%;    
+    width: 100%;
+    height: calc(720px - 46px);
+    overflow-y: auto;
+}
+
+.chat-list-box::-webkit-scrollbar {
+    width: 8px; /*스크롤바의 너비*/
+}
+
+.chat-list-box::-webkit-scrollbar-thumb {
+    background-color: #c9c9c9; /*스크롤바의 색상*/
+    background-clip: padding-box;
+    border: 1px solid transparent;
+    border-radius: 4px 4px;
+}
+
+.chat-list-box::-webkit-scrollbar-track {
+    background-color: #eaeaea; /*스크롤바 트랙 색상*/
 }
 
 .chat-box{
     width: -webkit-fill-available;
     padding: 13px 20px;
     border-bottom: 1px solid #e2e2e2;
+}
+
+.chat-box:hover {
+    background-color: rgba(250, 102, 22, 0.7);
 }
 
 .ai-profile{
@@ -133,6 +154,14 @@ hr{
 .chat-thumb-text{
     margin-top: 4px;
     font-size: 15px;
+    width: calc(360px - 96px);
+    
+    /* 2줄 초과하면 줄임 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .s-text{
@@ -142,14 +171,23 @@ hr{
 }
 
 .chat-box img{
-    height: auto;
+    height: 100%;
 }
 
 .thumbnail-box{
-    width: 48px;
-    height: 48px;
-    background-color:#818181;
-    border-radius: 8px;
+    width: 56px;
+    height: 56px;
+    background-color:#d9d9d9;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thumbnail-box img[src$="oreumi-long.png"] {
+    width: 50%;
+    height: 50%;
 }
 
 /* 채팅창 */
@@ -162,12 +200,12 @@ hr{
 }
 
 .contact-info{
-    padding: 14px 20px;
+    padding: 13px 20px 14px 20px;
     border-bottom: 1px solid #e2e2e2;
 }
 
 .goods-box{
-    padding: 14px 20px;
+    padding: 13px 20px;
     border-bottom: 1px solid #e2e2e2;;
 }
 
@@ -181,10 +219,21 @@ hr{
 .selected-thumbnail-box{
     width: 48px;
     height: 48px;
+    background-color: #d9d9d9;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .selected-thumbnail-box img{
     height: 100%;
+}
+
+.selected-thumbnail-box img[src$="oreumi-long.png"] {
+    width: 50%;
+    height: 50%;
 }
 
 .goods-box button{
@@ -197,26 +246,46 @@ hr{
 /* 채팅창 메인 */
 .chat-container{
     padding: 14px 20px;
-    max-height: 264px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-    ::-webkit-scrollbar {
-        display: none;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 8px;
+    /*스크롤바의 너비*/
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: #c9c9c9;
+    /*스크롤바의 색상*/
+    background-clip: padding-box;
+    border: 1px solid transparent;
+    border-radius: 4px 4px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background-color: #eaeaea;
+    /*스크롤바 트랙 색상*/
 }
 
 .message-box{
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-end;
     gap: 8px;
-    margin-bottom: 6px;
 }
 
 .message-text{
-    padding: 14px 20px;
+    padding: 12px 18px;
     background-color: #eaeaea;
     width: fit-content;
     border-radius: 20px;
+    line-height: 130%;
+    font-size: 15px
 }
 
 .from-me{

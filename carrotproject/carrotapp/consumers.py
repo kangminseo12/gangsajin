@@ -60,10 +60,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
 
         # 2. '메시지 읽음' 이벤트인 경우
-        if text_data_json['type'] == "page_visible":
-            
+        if text_data_json['type'] in ["page_clicked", "page_visible", "page_loaded"]:
+
             chatroom_id = text_data_json['chatroom_id']
             user_id = self.scope['user'].id
+            reader_id = text_data_json['reader_id']
             
             # (데이터베이스) 메시지 -> '읽음'으로 업데이트
             await self.update_messages(chatroom_id, user_id)
@@ -73,6 +74,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'read_message',
+                    'reader_id': reader_id
                 }
             )
 
@@ -92,8 +94,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # 메시지가 '읽음' 처리되었음을 알리기 위해 호출됩니다.
     async def read_message(self, event):
+        reader_id = event['reader_id']
+        
         await self.send(text_data=json.dumps({
-            'type' : 'read_message'
+            'type' : 'read_message',
+            'reader_id': reader_id
         }))
 
     # chatroom의 id로 chatroom 인스턴스를 가져옵니다.
