@@ -42,8 +42,8 @@
            </div> 
           </form> 
         </div>
+        <label for="user-setting" class="bold">내 게시물</label>
         <div class="user-posting-box">
-          <label for="user-setting">내 게시물</label>
           {% for post in user_posts %}
           <div class="post">
             <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">

@@ -1,0 +1,34 @@
+{% load mptt_tags %}
+
+{% block content %}
+<style>
+.i3servicelist ul {list-style-type: none;}
+.i3servicelist_element {border-bottom:1px solid #ddd;display:block;margin:0;padding: 8px;}
+.i3servicelist_element .hide{display:none;}
+
+</style>
+    <ul class="category">
+        {% recursetree categories %}
+        <li class="categoryMenu">
+            <span rel="tooltip" data-placement="left" data-html="true" title="{{ node.tooltip|safe }}">
+                {{ node.name }}
+            </span>
+            {% if not node.is_leaf_node %}
+            <ul class="hide">
+                {{ children }}
+            </ul>
+        {% endif %}
+        </li>
+        {% endrecursetree %}
+    </ul>
+
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".categoryMenu>span").click(function(){
+            $(this).next("ul").toggleClass("hide");
+        });
+    });
+</script>
+
+{% endblock content %}
