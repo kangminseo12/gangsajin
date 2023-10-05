@@ -137,7 +137,7 @@ hr{
 }
 
 .chat-box:hover {
-    background-color: rgba(250, 102, 22, 0.5);
+    background-color: rgba(250, 102, 22, 0.7);
 }
 
 .ai-profile{
@@ -177,8 +177,17 @@ hr{
 .thumbnail-box{
     width: 56px;
     height: 56px;
-    background-color:#818181;
+    background-color:#d9d9d9;
     border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thumbnail-box img[src$="oreumi-long.png"] {
+    width: 50%;
+    height: 50%;
 }
 
 /* 채팅창 */
@@ -210,10 +219,21 @@ hr{
 .selected-thumbnail-box{
     width: 48px;
     height: 48px;
+    background-color: #d9d9d9;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .selected-thumbnail-box img{
     height: 100%;
+}
+
+.selected-thumbnail-box img[src$="oreumi-long.png"] {
+    width: 50%;
+    height: 50%;
 }
 
 .goods-box button{

@@ -1,5 +1,5 @@
 {% load static %}
-{% load custom_timesince %}
+{% load custom_filters %}
 {% load humanize %}
 
 <!DOCTYPE html>
@@ -63,12 +63,19 @@
                   {% if chatroom.message %}
                   <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p>
                   {% endif %}
-                  {% comment %} <p class="s-text">{{ chatroom.message.sent_at }}</p> {% endcomment %}
                 </div>
                 <p class="chat-thumb-text">{{ chatroom.message.content }}</p>
               </div>
               <div class="thumbnail-box">
-                <img src="{{ chatroom.product.thumbnail.url }}" alt="{{ chatroom.product.title }}">
+                {% if chatroom.product.thumbnail.url %}
+                    {% with thumbnail_path=chatroom.product.thumbnail.path %}
+                        {% if thumbnail_path|file_exists %}
+                            <img src="{{ chatroom.product.thumbnail.url }}" alt="{{ chatroom.product.title }}">
+                        {% else %}
+                            <img src="{% static 'img/oreumi-long.png' %}">
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
               </div>
             </div>
             {% endfor %}
@@ -90,7 +97,15 @@
             <div class="goods-box flex-box between">
               <div class="flex-box">
                 <div class="selected-thumbnail-box">
-                  <img src="{{ product.thumbnail.url }}" alt="{{ product.thumbnail.title }}">
+                    {% if product.thumbnail.url %}
+                        {% with thumbnail_path=product.thumbnail.path %}
+                            {% if thumbnail_path|file_exists %}
+                                <img src="{{ product.thumbnail.url }}" alt="{{ product.thumbnail.title }}">
+                            {% else %}
+                                <img src="{% static 'img/oreumi-long.png' %}">
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
                 </div>
                 <div class="goods-info-box">
                   <p>{{ product.title }}</p>
@@ -102,7 +117,8 @@
                 {% csrf_token %}
                 <button type="submit">거래확정하기</button>
               </form>
-              {% endif %}            </div>
+              {% endif %}
+            </div>
 
             <!--채팅창 메인-->
             <div class="chat-container">
