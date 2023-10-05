@@ -3,7 +3,7 @@
 <html>
 
   <head>
-    <title>중고거래</title>
+    <title>동네생활</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/trade.css' %}"/>
@@ -16,36 +16,29 @@
     <div class="content-box">
       <a href="{% url 'dangun_app:write' %}">
         <div class="floating-button">
-          거래글쓰기
+          생활글쓰기
         </div>
       </a>
       <div class="about-trade">
         <div class="container ">
           <div class="trade-text">
-            <h3>믿을만한</br>이웃 간 중고거래</h3>
-          <p>동네 주민들과 가깝고 따뜻한 거래를</br>지금 경험해보세요.</p>
+            <h3>즐거운</br>우리동네 이야기</h3>
+          <p>동네 주민들과 알차고 유익한 정보공유</br>지금 경험해보세요.😆</p>
       </div>
       <div class="thumbnail-img">
-        <img src="{% static 'img/img1.png' %}" alt=""/>
+        <img src="{% static 'img/img2.png' %}" alt=""/>
       </div>
     </div>
   </div>
 
   <div class="post-box">
-    <div class="tag-container">
-      {% comment %} {% include 'dangun_app/category.html' %} {% endcomment %}
-      {% for category in categories %}
-      <a href="{% url 'dangun_app:trade_by_tag' category.name %}">{{ category.name }}</a>
-      {% endfor %}
-    </div>
     <div class="container column center">
-      <h1>중고거래 인기매물</h1>
+      <h1>우리동네 정보방</h1>
     </div>
     <div class="container column center">
       <div class="full-box trade-box column">
         <div class="flex-box full-box card-container between">
           {% for post in posts %}
-
             <div class="card-box">
               <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
                 <div class="card-img">
@@ -55,21 +48,19 @@
                 </div>
                 <div class="card-info-box">
                   <h5>{{ post.title }}</h5>
-                  <p class="bold">{{ post.price }}원</p>
+                  {% comment %} <p class="bold">{{ post.price }}원</p> {% endcomment %}
                   <p>{{ post.location|slice:":12" }}</p>
-                  {% comment %} | slice 로 작동할수있다니 놀랍다 {% endcomment %}
                   <div class="flex-box">
-                    <p>조회
+                    {% comment %} <p>조회
                       {{ post.view }}</p>
                     <p>·</p>
                     <p>채팅
-                      {{ post.chat_id }}</p>
+                      {{ post.chat_id }}</p> {% endcomment %}
                   </div>
                 </div>
               </a>
             </div>
-          {% endfor %}
-
+          {% endfor %}    
         </div>
       </div>
     </div>

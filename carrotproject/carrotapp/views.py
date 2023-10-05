@@ -35,7 +35,18 @@ def alert(request, alert_message):
 
 def trade(request):
     top_views_posts = PostProduct.objects.filter(status="N").order_by("-view")
-    return render(request, "dangun_app/trade.html", {"posts": top_views_posts})
+    categories = Category.objects.all()
+    return render(
+        request, "dangun_app/trade.html", {"posts": top_views_posts, "categories": categories}
+    )
+
+
+def trade_by_tag(request, tag):
+    top_views_posts = PostProduct.objects.filter(status="N", category__name=tag).order_by("-view")
+    categories = Category.objects.all()
+    return render(
+        request, "dangun_app/trade.html", {"posts": top_views_posts, "categories": categories}
+    )
 
 
 def search(request):
@@ -102,6 +113,13 @@ def userset(request):
                'deal_complete_sum': deal_complete_sum}
 
     return render(request, "dangun_app/user-set.html", context)
+
+
+@login_required
+def living(request):
+    list_post = PostProduct.objects.filter(location="강사진").order_by("-view")
+    return render(request, "dangun_app/living.html", {"posts": list_post})
+    # return render(request, "dangun_app/living.html")
 
 
 # 거래글 작성
@@ -404,3 +422,10 @@ def deal_done(request, post_id, buyier_id):
 
     # 거래가 확정되면 새로고침
     return redirect("dangun_app:trade_post", pk=post_id)
+
+
+# def category_list(request):
+#     categories = Category.objects.filter(parent=None)
+#     post = PostProduct.objects.all()
+#     context = {"categories": categories, "post": post}
+#     return render(request, "dangun_app/categories.html", context)

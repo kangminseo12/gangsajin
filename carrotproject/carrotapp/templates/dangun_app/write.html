@@ -33,6 +33,9 @@
                       <input type="text" name="title" placeholder="글 제목" required="required" value="{% if post %}{{ post.title }}{% endif %}">
                       <label for=" price">가격</label>
                       <input type="text" name="price" placeholder="가격" required="required" value="{% if post %}{{ post.price }}{% endif %}">
+                      <div class="dropdown-content">
+                        <p>{% include 'dangun_app/category.html' %}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

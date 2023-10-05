@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -11,6 +11,7 @@ urlpatterns = [
     path("trade/<int:pk>", views.trade_post, name="trade_post"),
     path("userset", views.userset, name="userset"),
     path("user-set/", views.userset, name="userset"),
+    path("living/", views.living, name="living"),
     path("alert/<str:alert_message>/", views.alert, name="alert"),
     path("wirte/", views.write, name="write"),
     path("edit/<int:post_id>/", views.edit, name="edit"),
@@ -28,4 +29,7 @@ urlpatterns = [
     path("autocomplete", views.auto, name="autocomplete"),
     path("deal_done/<int:post_id>/<int:buyier_id>", views.deal_done, name="deal_done"),
     path("trade/<int:post_id>/add_comment/", views.add_comment, name="add_comment"),
+    path("trade/tag/<str:tag>/", views.trade_by_tag, name="trade_by_tag"),
+    re_path(r"^trade/tag/(?P<tag>.+)/$", views.trade_by_tag, name="trade_by_tag"),
 ]
+# re_path 를통해 /가 사용가능하게끔 에러나면 최우선삭제

@@ -44,6 +44,7 @@
            </div> 
           </form> 
         </div>
+
         <div id="my_activity_info">
           <label for="user-setting" class="my_post">내 게시물</label>
           <div id="my_activity_info_detail">
@@ -52,6 +53,7 @@
             <p>총 거래 금액<span> {{ deal_complete_sum|intcomma }}원</span></p>
           </div>
         </div>
+
         <div class="user-posting-box">
           {% for post in user_posts %}
           <div class="post">
