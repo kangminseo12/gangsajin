@@ -1,5 +1,6 @@
 {% load static %}
 {% load custom_timesince %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +29,7 @@
 
             <!-- 아이디및 체크박스 -->
             <div class="id-box flex-box between">
-              {{ user.nickname }}
+                <p class="bold">{{ user.nickname }}</p>
               <div>
                 <label>
                   안읽은 메세지만 보기
@@ -46,7 +47,7 @@
                 <img src="{% static 'img/icon_aibot.png'%}" alt="">
               </div>
               <div>
-                <p class="bold">AI 챗봇</p>
+                <p class="semi-bold">AI 챗봇</p>
                 <p class="chat-thumb-text">궁금한 내용을 물어보세요!</p>
               </div>
             </div>
@@ -57,7 +58,7 @@
             onclick='location.href="{% url 'dangun_app:selected_chatroom' chatroom.chatroom.id%}";'>
               <div>
                 <div class="flex-box">
-                  <p class="bold">{{ chatroom.chat_partner.nickname }}</p>
+                  <p class="semi-bold">{{ chatroom.chat_partner.nickname }}</p>
                   <p class="s-text">{{ chatroom.chat_partner.location }}</p>
                   {% if chatroom.message %}
                   <p class="s-text">{{ chatroom.message.sent_at|custom_timesince }}</p>
@@ -78,10 +79,10 @@
         {% if selected_chatroom %}
         <div class="chat-main-container">
           <div>
-            <div class="contact-info flex-box">
+            <div class="contact-info flex-box bold">
               {{ chat_partner.nickname }}
               <div class="temp">
-                {{ chat_partner.manner }}
+                {{ chat_partner.manner }}°C
               </div>
             </div>
 
@@ -93,7 +94,7 @@
                 </div>
                 <div class="goods-info-box">
                   <p>{{ product.title }}</p>
-                  <p class="bold">{{ product.price }}</p>
+                  <p class="semi-bold">{{ product.price|intcomma }}원</p>
                 </div>
               </div>
               {% if user.id == product.author.id %}
@@ -113,11 +114,11 @@
                     <span class="is-read"> ● </span>
                     {% endif %}
                     <p class="s-text">{{ message.sent_at }}</p>
-                    <div class="message-text">{{ message.content }}</div>
+                    <div class="message-text">{{ message.content|escape|linebreaks }}</div>
                 </div>
                 {% else %}
                 <div class="message-box from-you">
-                    <div class="message-text">{{ message.content }}</div>
+                    <div class="message-text">{{ message.content|escape|linebreaks }}</div>
                     <p class="s-text">{{ message.sent_at }}</p>
                     {% if message.is_read == False %}
                       <span class="is-read"> ● </span>
@@ -188,9 +189,17 @@
         const sentAtElement = document.createElement('p');
         sentAtElement.classList.add('s-text');
         sentAtElement.textContent = data.sent_at;
+        
         const messageTextElement = document.createElement('div');
         messageTextElement.classList.add('message-text');
-        messageTextElement.textContent = data.message;
+
+        // 메시지 텍스트의 콘텐츠를 안전하게 이스케이프 처리
+        let escapedMessage = data.message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        
+        // 줄바꿈을 <br>로 변환
+        escapedMessage = escapedMessage.replace(/\n/g, "<br>");
+        
+        messageTextElement.innerHTML = escapedMessage; // 이스케이프된 메시지를 innerHTML에 적용
 
         // 메시지 발신자에 따라 UI를 다르게 처리
         if (data.sender_id === {{ user.id }}) {
@@ -273,24 +282,29 @@
       messageInputDom.addEventListener('keypress', function(event) {
         // 엔터 키의 keyCode는 13입니다.
         if (event.keyCode == 13) {
-          // 엔터 키에 의한 폼 제출을 방지합니다.
-          event.preventDefault();
+          // shift키를 누르고 있다면 메시지를 전송하지 않습니다.
+          if (!event.shiftKey) {
+            // 엔터 키에 의한 폼 제출을 방지합니다.
+            event.preventDefault();
 
-          let message = messageInputDom.value;
-          let chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
-          let receiverId = JSON.parse(document.getElementById('chat-partner-id').textContent);
+            let message = messageInputDom.value;
+            let chatRoomId = JSON.parse(document.getElementById('selected-chatroom-id').textContent);
+            let receiverId = JSON.parse(document.getElementById('chat-partner-id').textContent);
 
-          chatSocket.send(JSON.stringify({
-            'type': 'message_created',
-            'message': message,
-            'chatroom_id': chatRoomId,
-            'receiver_id': receiverId
-          }));
-          messageInputDom.value = '';
-          setTimeout(function() {
-        chatLog.scrollTop = chatLog.scrollHeight;}, 2000);
+            chatSocket.send(JSON.stringify({
+              'type': 'message_created',
+              'message': message,
+              'chatroom_id': chatRoomId,
+              'receiver_id': receiverId
+            }));
+            
+            messageInputDom.value = '';
+            
+            setTimeout(function() {chatLog.scrollTop = chatLog.scrollHeight;}, 2000);
+          }
         }
       });
+    
 
       // 페이지 활성화되었을 때 웹소켓으로 메시지 '읽음' 여부 보내기
       document.addEventListener('visibilitychange', function () {
