@@ -113,13 +113,14 @@
                     {% if message.is_read == False %}
                     <span class="is-read"> ● </span>
                     {% endif %}
-                    <p class="s-text">{{ message.sent_at }}</p>
+                    <!-- A: AM/PM (오후/오전) 표시, g: 12시간 형식의 시간 (시간 앞 0 없이), i: 분 -->
+                    <p class="s-text">{{ message.sent_at|date:"A g:i" }}</p>
                     <div class="message-text">{{ message.content|escape|linebreaks }}</div>
                 </div>
                 {% else %}
                 <div class="message-box from-you">
                     <div class="message-text">{{ message.content|escape|linebreaks }}</div>
-                    <p class="s-text">{{ message.sent_at }}</p>
+                    <p class="s-text">{{ message.sent_at|date:"A g:i" }}</p>
                     {% if message.is_read == False %}
                       <span class="is-read"> ● </span>
                     {% endif %}
@@ -188,7 +189,18 @@
         const messageElement = document.createElement('div');
         const sentAtElement = document.createElement('p');
         sentAtElement.classList.add('s-text');
-        sentAtElement.textContent = data.sent_at;
+        
+        // ISO 형식의 문자열로 Date 객체 생성
+        const sentAt = new Date(data.sent_at);
+
+        // 시간을 '오후 12:35'와 같은 형식으로 포맷팅
+        const formattedSentAt = sentAt.toLocaleTimeString('ko-KR', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+        
+        sentAtElement.textContent = formattedSentAt;
         
         const messageTextElement = document.createElement('div');
         messageTextElement.classList.add('message-text');
