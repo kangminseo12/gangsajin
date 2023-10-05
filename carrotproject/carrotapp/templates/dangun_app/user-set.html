@@ -1,4 +1,6 @@
 {% load static %}
+{% load custom_filters %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html>
@@ -42,18 +44,41 @@
            </div> 
           </form> 
         </div>
+        <div id="my_activity_info">
+          <label for="user-setting" class="my_post">내 게시물</label>
+          <div id="my_activity_info_detail">
+            <p>게시물 수<span> {{ user_posts_count }}</span></p>
+            <p>거래 완료<span> {{ deal_complete_count }}</span></p>
+            <p>총 거래 금액<span> {{ deal_complete_sum|intcomma }}원</span></p>
+          </div>
+        </div>
         <div class="user-posting-box">
-          <label for="user-setting">내 게시물</label>
           {% for post in user_posts %}
           <div class="post">
             <a href="{% url 'dangun_app:trade_post' post.pk %}" class="trade-text-link">
               <div class="card-img">
-                {% if post.thumbnail %}
-                  <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                {% if post.thumbnail.url %}
+                    {% with thumbnail_path=post.thumbnail.path %}
+                        {% if thumbnail_path|file_exists %}
+                          {% if post.status == "Y" %}
+                            <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" style="filter:brightness(60%);">
+                            <h2 class="image_tag_text" style="font-size:20px">판매<br>완료</h2>
+                          {% else %}
+                            <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                          {% endif %}
+                        {% else %}
+                          {% if post.status == "Y" %}
+                            <img src="{% static 'img/oreumi-long.png' %}" style="filter:brightness(60%);">
+                            <h2 class="image_tag_text" style="font-size:20px">판매<br>완료</h2>
+                          {% else %}
+                            <img src="{% static 'img/oreumi-long.png' %}">
+                          {% endif %}
+                        {% endif %}
+                    {% endwith %}
                 {% endif %}
               </div>
               <h5>{{ post.title }}</h5>
-              <p class="bold">{{ post.price }}원</p>
+              <p class="semi-bold">{{ post.price }}원</p>
               <p>{{ post.location|slice:":12" }}</p>
             </div>
             </a>
