@@ -14,12 +14,23 @@
     background-color: #ff823f;
 }
 
-.user-setting-box {
-    margin-top: 64px;
+/* 타이틀 설정 (Nickname 설정, E-Mail 설정, 내 게시물) */
+label {
+    font-size: 20px;
+    font-weight: 700;
 }
 
-.user-setting-box label {
-    margin-bottom: 2px;
+.user-setting-box form {
+    margin-top: 8px
+}
+
+/* 내 게시물 */
+.my_post {
+    margin-bottom: initial;
+}
+
+.user-setting-box {
+    margin-top: 64px;
 }
 
 .region-setting {
@@ -36,36 +47,110 @@
     padding: 14px;
 }
 
+#my_activity_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 1200px;
+    margin: 64px 20px 0px 20px;
+    gap: 16px;
+}
+
+#my_activity_info_detail {
+    display: flex;
+    gap: 12px;
+}
+
+#my_activity_info_detail span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
 /* user-post css */
 .user-posting-box {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-top: 32px;
 }
 
 .trade-text-link {
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     /* 링크의 밑줄 제거 */
     color: inherit;
     /* 링크 색상을 상위 요소와 동일하게 설정 */
 }
 
+/* 상품 이름 */
+.trade-text-link h5{
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: 0.51px;
+    margin-top: 12px;
+}
+
+/* 상품 가격 */
+.trade-text-link p {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.42px;
+    margin-top: 2px;
+}
+
+/* 상품 위치 */
+.trade-text-link p:last-child {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.42px;
+    margin-top: 6px;
+}
+
 .post {
-    width: calc((100% / 3) - (20px * 2));
+    width: calc((100% / 4) - (20px * 2));
     /* 화면 너비의 세분의 일로 설정, 좌우 마진 고려 */
     margin: 20px;
     /* 각 포스트 사이에 여백 추가 */
     display: flex;
-    align-items: center;
+    justify-content: center;
+}
+
+.post:hover {
+    opacity: 0.8;
 }
 
 .card-img {
     width: 150px;
-    height: auto;
-    margin-right: 20px;
+    height: 150px;
+    border-radius: 12px;
+    background: #fafafa;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+}
+
+.image_tag_text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    line-height: 120%;
 }
 
 .card-img img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: contain;
+}
+
+.card-img img[src$="oreumi-long.png"] {
+    max-width: 50%;
+    opacity: 0.9;
 }

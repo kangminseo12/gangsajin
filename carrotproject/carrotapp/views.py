@@ -89,9 +89,19 @@ def userset(request):
                 messages.success(request, "Email updated.")
             except Exception as e:
                 messages.error(request, str(e))
-    user_posts = PostProduct.objects.filter(author=request.user)
+    
+    user_posts = PostProduct.objects.filter(author=request.user).order_by('-created_at').order_by('status')
+    user_posts_count = user_posts.count()
+    deal_complete = PostProduct.objects.filter(author=request.user, status="Y")
+    deal_complete_count = deal_complete.count()
+    deal_complete_sum = sum(product.price for product in deal_complete)
+ 
+    context = {'user_posts': user_posts,
+               'user_posts_count': user_posts_count,
+               'deal_complete_count': deal_complete_count,
+               'deal_complete_sum': deal_complete_sum}
 
-    return render(request, "dangun_app/user-set.html", {"user_posts": user_posts})
+    return render(request, "dangun_app/user-set.html", context)
 
 
 # 거래글 작성
@@ -207,15 +217,20 @@ def trade_post(request, pk):
     post.save()
     comments = Comment.objects.filter(post=post).order_by("-created_date")
 
+    # 가장 최근 생성된 채팅방
+    recent_chatroom = ChatRoom.objects.filter(product_id=post.id).order_by("-created_at").first()
+
     context = {
         "post": post,
         "comments": comments,
         "form": CommentForm(),
+        "recent_chatroom": recent_chatroom
     }
 
     return render(request, "dangun_app/trade_post.html", context)
 
 # 채팅방 생성
+@login_required
 def create_chatroom(request, post_id):
     if request.method == "POST":
         host = PostProduct.objects.get(id=post_id).author_id
