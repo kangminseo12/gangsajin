@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'carrotapp',
     'user_app',
+    'crawling_app',
     'mptt'
 ]
 
