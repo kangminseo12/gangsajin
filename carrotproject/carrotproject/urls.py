@@ -26,7 +26,7 @@ urlpatterns = [
     path("", include("carrotapp.urls")),
     path("user/", include("user_app.urls")),
     path('favicon.ico', RedirectView.as_view(url='/static/dangun_app/favicon.ico', permanent=True)),
-
+    path('crawling/',include("crawling_app.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
